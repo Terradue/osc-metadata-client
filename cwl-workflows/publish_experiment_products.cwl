@@ -92,18 +92,18 @@ $graph:
   requirements:
     NetworkAccess:
       networkAccess: true
-    DockerRequirement:
-      dockerPull: ghcr.io/terradue/osc-metadata-client:latest 
     SchemaDefRequirement:
       types:
       - $import: https://raw.githubusercontent.com/eoap/schemas/main/string_format.yaml
   baseCommand:
-  - uv run
+  - uv
+  arguments:
+  - run
   - --no-cache
   - --no-project
-  - --with osc-metadata-client
+  - --with
   - osc-metadata-client
-  arguments:
+  - osc-metadata-client
   - valueFrom: experiment
     position: 7
   inputs:
@@ -167,18 +167,18 @@ $graph:
   requirements:
     NetworkAccess:
       networkAccess: true
-    DockerRequirement:
-      dockerPull: ghcr.io/terradue/osc-metadata-client:latest 
     SchemaDefRequirement:
       types:
       - $import: https://raw.githubusercontent.com/eoap/schemas/main/string_format.yaml
   baseCommand:
-  - uv run
+  - uv
+  arguments:
+  - run
   - --no-cache
   - --no-project
-  - --with osc-metadata-client
+  - --with
   - osc-metadata-client
-  arguments:
+  - osc-metadata-client
   - valueFrom: products
     position: 7
   inputs:
