@@ -13,7 +13,7 @@
 # limitations under the License.
 
 from loguru import logger
-from osc_client import (
+from osc_metadata_client import (
     cast_model,
     create_client,
     retrieve_status_info,
@@ -21,9 +21,9 @@ from osc_client import (
     serialize_yaml,
 )
 from ogc_api_processes_client.models.status_info import StatusInfo
-from osc_client.models import ExperimentProperties
+from osc_metadata_client.models import ExperimentProperties
 from pathlib import Path
-from transpiler_mate.ogcapi_records.ogcapi_records_models import Link, RecordGeoJSON
+from transpiler_mate.ogcapi.records.ogcapi_records_models import Link, RecordGeoJSON
 
 
 def execute(
@@ -36,7 +36,7 @@ def execute(
 ):
     logger.debug("Enriching OGCP API Records...")
 
-    record_geojson.links.append(  # type: ignore see osc_client.load_record_geojson
+    record_geojson.links.append(  # type: ignore see osc_metadata_client.load_record_geojson
         Link(
             rel="parent",
             href="../catalog.json",
@@ -47,7 +47,7 @@ def execute(
             updated=None,
         )
     )
-    record_geojson.links.append(  # type: ignore see osc_client.load_record_geojson
+    record_geojson.links.append(  # type: ignore see osc_metadata_client.load_record_geojson
         Link(
             href=f"{ogc_api_processes_endpoint}/jobs/{record_geojson.id}",
             hreflang="en-US",
@@ -73,7 +73,7 @@ def execute(
 
     serialize_yaml(status_info.inputs, input_files)
 
-    record_geojson.links.append(  # type: ignore see osc_client.load_record_geojson
+    record_geojson.links.append(  # type: ignore see osc_metadata_client.load_record_geojson
         Link(
             href=f"./{input_files.name}",
             hreflang="en-US",
@@ -84,7 +84,7 @@ def execute(
             updated=status_info.started,
         )
     )
-    record_geojson.links.append(  # type: ignore see osc_client.load_record_geojson
+    record_geojson.links.append(  # type: ignore see osc_metadata_client.load_record_geojson
         Link(
             href="./environment.yaml",
             hreflang="en-US",
@@ -95,7 +95,7 @@ def execute(
             updated=status_info.started,
         )
     )
-    record_geojson.links.append(  # type: ignore see osc_client.load_record_geojson
+    record_geojson.links.append(  # type: ignore see osc_metadata_client.load_record_geojson
         Link(
             href=f"../../workflows/{workflow_id}/record.json",
             hreflang="en-US",

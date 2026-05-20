@@ -24,7 +24,7 @@ from pathlib import Path
 import pytest
 
 ROOT = Path(__file__).resolve().parents[1]
-SRC_DIR = ROOT / "src" / "osc_client"
+SRC_DIR = ROOT / "src" / "osc_metadata_client"
 
 
 def _load_module(module_name: str, path: Path, package: bool = False):
@@ -147,24 +147,26 @@ def _install_ogc_api_processes_stubs() -> None:
 @pytest.fixture
 def osc_modules():
     for name in list(sys.modules):
-        if name == "osc_client" or name.startswith("osc_client."):
+        if name == "osc_metadata_client" or name.startswith("osc_metadata_client."):
             del sys.modules[name]
 
     _install_ogc_api_processes_stubs()
 
-    package = _load_module("osc_client", SRC_DIR / "__init__.py", package=True)
-    about = _load_module("osc_client.__about__", SRC_DIR / "__about__.py")
-    models = _load_module("osc_client.models", SRC_DIR / "models.py")
+    package = _load_module("osc_metadata_client", SRC_DIR / "__init__.py", package=True)
+    about = _load_module("osc_metadata_client.__about__", SRC_DIR / "__about__.py")
+    models = _load_module("osc_metadata_client.models", SRC_DIR / "models.py")
     osc_extension = _load_module(
-        "osc_client.osc_extension", SRC_DIR / "osc_extension.py"
+        "osc_metadata_client.osc_extension", SRC_DIR / "osc_extension.py"
     )
     themes_extension = _load_module(
-        "osc_client.themes_extension", SRC_DIR / "themes_extension.py"
+        "osc_metadata_client.themes_extension", SRC_DIR / "themes_extension.py"
     )
-    workflow = _load_module("osc_client.workflow", SRC_DIR / "workflow.py")
-    experiment = _load_module("osc_client.experiment", SRC_DIR / "experiment.py")
-    product = _load_module("osc_client.product", SRC_DIR / "product.py")
-    cli = _load_module("osc_client.cli", SRC_DIR / "cli.py")
+    workflow = _load_module("osc_metadata_client.workflow", SRC_DIR / "workflow.py")
+    experiment = _load_module(
+        "osc_metadata_client.experiment", SRC_DIR / "experiment.py"
+    )
+    product = _load_module("osc_metadata_client.product", SRC_DIR / "product.py")
+    cli = _load_module("osc_metadata_client.cli", SRC_DIR / "cli.py")
 
     return {
         "package": package,

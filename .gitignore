@@ -1,6 +1,9 @@
+*_bundled.cwl
+.task
 .venv
 .vscode
 .ruff_cache
 .pytest_cache
 __pycache__
 docs/diagrams/out/
+osc_sequences.sh
