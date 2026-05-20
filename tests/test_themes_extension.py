@@ -21,10 +21,10 @@ import pystac
 import pytest
 
 MODULE_PATH = (
-    Path(__file__).resolve().parents[1] / "src" / "osc_client" / "themes_extension.py"
+    Path(__file__).resolve().parents[1] / "src" / "osc_metadata_client" / "themes_extension.py"
 )
 SPEC = importlib.util.spec_from_file_location(
-    "osc_client.themes_extension", MODULE_PATH
+    "osc_metadata_client.themes_extension", MODULE_PATH
 )
 assert SPEC is not None
 assert SPEC.loader is not None

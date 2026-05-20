@@ -12,10 +12,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from osc_client import load_record_geojson
-from osc_client.experiment import execute as execute_experiment
-from osc_client.product import execute as execute_product
-from osc_client.workflow import execute as execute_workflow
+from osc_metadata_client import load_record_geojson
+from osc_metadata_client.experiment import execute as execute_experiment
+from osc_metadata_client.product import execute as execute_product
+from osc_metadata_client.workflow import execute as execute_workflow
 from pathlib import Path
 from transpiler_mate.cli.cli import _track
 from transpiler_mate.ogcapi.records.ogcapi_records_models import RecordGeoJSON

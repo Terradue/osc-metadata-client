@@ -13,8 +13,8 @@
 # limitations under the License.
 
 from loguru import logger
-from osc_client import cast_model, dump_data
-from osc_client.models import OscStatus, WorkflowProperties
+from osc_metadata_client import cast_model, dump_data
+from osc_metadata_client.models import OscStatus, WorkflowProperties
 from pathlib import Path
 from transpiler_mate.ogcapi.records.ogcapi_records_models import Link, RecordGeoJSON
 
@@ -28,7 +28,7 @@ def execute(
 ):
     logger.debug("Enriching OGCP API Records...")
 
-    record_geojson.links.append(  # type: ignore see osc_client.load_record_geojson
+    record_geojson.links.append(  # type: ignore see osc_metadata_client.load_record_geojson
         Link(
             rel="parent",
             href="../catalog.json",
@@ -39,7 +39,7 @@ def execute(
             updated=None,
         )
     )
-    record_geojson.links.append(  # type: ignore see osc_client.load_record_geojson
+    record_geojson.links.append(  # type: ignore see osc_metadata_client.load_record_geojson
         Link(
             href=source,
             hreflang="en-US",
@@ -50,7 +50,7 @@ def execute(
             updated=record_geojson.properties.created,
         )
     )
-    record_geojson.links.append(  # type: ignore see osc_client.load_record_geojson
+    record_geojson.links.append(  # type: ignore see osc_metadata_client.load_record_geojson
         Link(
             href="https://cwltool.readthedocs.io/en/latest/",
             hreflang="en-US",
@@ -61,7 +61,7 @@ def execute(
             updated=None,
         )
     )
-    record_geojson.links.append(  # type: ignore see osc_client.load_record_geojson
+    record_geojson.links.append(  # type: ignore see osc_metadata_client.load_record_geojson
         Link(
             href=f"{ogc_api_processes_endpoint}/processes/{record_geojson.id}",
             hreflang="en-US",
