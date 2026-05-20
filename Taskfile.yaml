@@ -35,7 +35,7 @@ tasks:
       uv run \
       --no-cache \
       --no-project \
-      --with cwl-loader \
+      --with "cwl-loader==0.19.0" \
       cwl-loader bundle \
       ./cwl-workflows/{{.WORKFLOW_ID}}.cwl \
       --output ./cwl-workflows/{{.WORKFLOW_ID}}_bundled.cwl

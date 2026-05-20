@@ -4,7 +4,7 @@ ESA Open Science Catalog Client
 
 > This software is licensed under the terms of the [Apache License 2.0](https://www.apache.org/licenses/LICENSE-2.0) license - SPDX short identifier: [Apache-2.0](https://spdx.org/licenses/Apache-2.0)
 >
-> 2026-05-12 - 2026-05-19T15:46:21.620 Copyright [Terradue Srl](mailto:info@terradue.com) - > [https://ror.org/0069cx113](https://ror.org/0069cx113)
+> 2026-05-12 - 2026-05-20T14:39:16.419 Copyright [Terradue Srl](mailto:info@terradue.com) - > [https://ror.org/0069cx113](https://ror.org/0069cx113)
 
 ## Project Team
 
@@ -23,7 +23,7 @@ The are no contributors for this project.
 
 ## User Manual
 
-User Manual can be found on [https://terradue.github.io/osc-client/](https://terradue.github.io/osc-client/).
+User Manual can be found on [https://terradue.github.io/osc-metadata-client/](https://terradue.github.io/osc-metadata-client/).
 
 
 ## Runtime environment
@@ -41,9 +41,9 @@ User Manual can be found on [https://terradue.github.io/osc-client/](https://ter
 
 ## Software Source code
 
-- Browsable version of the [source repository](https://github.com/Terradue/osc-client.git);
-- [Continuous integration](https://github.com/Terradue/osc-client/actions) system used by the project;
-- Issues, bugs, and feature requests should be submitted to the following [issue management](https://github.com/Terradue/osc-client/issues) system for this project
+- Browsable version of the [source repository](https://github.com/Terradue/osc-metadata-client.git);
+- [Continuous integration](https://github.com/Terradue/osc-metadata-client/actions) system used by the project;
+- Issues, bugs, and feature requests should be submitted to the following [issue management](https://github.com/Terradue/osc-metadata-client/issues) system for this project
 
 
 ---
@@ -79,8 +79,8 @@ User Manual can be found on [https://terradue.github.io/osc-client/](https://ter
 | Id | Runs | Label | Doc |
 |----|------|-------|-----|
 | [sync_git_repository](#sync_git_repository_cli) | `#sync_git_repository_cli` | None | None |
-| [publish_product](#publish_product_cli) | `#publish_product_cli` | None | None |
 | [publish_experiment](#publish_experiment_cli) | `#publish_experiment_cli` | None | None |
+| [publish_product](#publish_product_cli) | `#publish_product_cli` | None | None |
 | [commit_and_push](#commit_and_push_cli) | `#commit_and_push_cli` | None | None |
 
 
@@ -161,46 +161,7 @@ Learn more about the [State diagram](https://en.wikipedia.org/wiki/State_diagram
 ### Execution usage example:
 
 ```
-bash run.sh \
-```
-
-### Run in step
-
-`publish_product`
-
-
-
-## publish_product_cli
-
-### CWL Class
-
-[CommandLineTool](https://www.commonwl.org/v1.2/CommandLineTool.html#CommandLineTool)
-
-### Inputs
-
-| Id | Option | Type |
-|----|------|-------|
-| `job_id` | `--id` | [string](https://www.commonwl.org/v1.2/Workflow.html#CWLType) |
-| `project_id` | `--project-id` | [string](https://www.commonwl.org/v1.2/Workflow.html#CWLType) |
-| `project_name` | `--project-name` | [string](https://www.commonwl.org/v1.2/Workflow.html#CWLType) |
-| `ogc_api_processes_endpoint` | `--ogc-api-processes-endpoint` | [URI](https://raw.githubusercontent.com/eoap/schemas/main/string_format.yaml#URI):<ul><li>`value`: [string](https://www.commonwl.org/v1.2/Workflow.html#CWLType)</li></ul> |
-| `osc_location` | `--output` | [Directory](https://www.commonwl.org/v1.2/Workflow.html#Directory) |
-| `cwl_workflow_location` | `--cwl_workflow_location` | [URI](https://raw.githubusercontent.com/eoap/schemas/main/string_format.yaml#URI):<ul><li>`value`: [string](https://www.commonwl.org/v1.2/Workflow.html#CWLType)</li></ul> |
-| `experiment_id` | `--experiment-id` | [string](https://www.commonwl.org/v1.2/Workflow.html#CWLType) |
-| `authorization_token` | `--authorization-token` | [string](https://www.commonwl.org/v1.2/Workflow.html#CWLType) |
-
-### Execution usage example:
-
-```
-uv run --no-cache --no-project --with osc-client osc-client <ARGUMENT_DYNAMICALLY_SET> \
---id <JOB_ID> \
---project-id <PROJECT_ID> \
---project-name <PROJECT_NAME> \
---ogc-api-processes-endpoint <OGC_API_PROCESSES_ENDPOINT> \
---output <OSC_LOCATION> \
---cwl_workflow_location <CWL_WORKFLOW_LOCATION> \
---experiment-id <EXPERIMENT_ID> \
---authorization-token <AUTHORIZATION_TOKEN>
+bash sync_git_repository_cli.sh \
 ```
 
 ### Run in step
@@ -231,7 +192,7 @@ uv run --no-cache --no-project --with osc-client osc-client <ARGUMENT_DYNAMICALL
 ### Execution usage example:
 
 ```
-uv run --no-cache --no-project --with osc-client osc-client <ARGUMENT_DYNAMICALLY_SET> \
+uv run --no-cache --no-project --with osc-metadata-client osc-metadata-client <ARGUMENT_DYNAMICALLY_SET> \
 --id <JOB_ID> \
 --project-id <PROJECT_ID> \
 --project-name <PROJECT_NAME> \
@@ -239,6 +200,45 @@ uv run --no-cache --no-project --with osc-client osc-client <ARGUMENT_DYNAMICALL
 --output <OSC_LOCATION> \
 --cwl_workflow_location <CWL_WORKFLOW_LOCATION> \
 --workflow-id <WORKFLOW_ID> \
+--authorization-token <AUTHORIZATION_TOKEN>
+```
+
+### Run in step
+
+`publish_product`
+
+
+
+## publish_product_cli
+
+### CWL Class
+
+[CommandLineTool](https://www.commonwl.org/v1.2/CommandLineTool.html#CommandLineTool)
+
+### Inputs
+
+| Id | Option | Type |
+|----|------|-------|
+| `job_id` | `--id` | [string](https://www.commonwl.org/v1.2/Workflow.html#CWLType) |
+| `project_id` | `--project-id` | [string](https://www.commonwl.org/v1.2/Workflow.html#CWLType) |
+| `project_name` | `--project-name` | [string](https://www.commonwl.org/v1.2/Workflow.html#CWLType) |
+| `ogc_api_processes_endpoint` | `--ogc-api-processes-endpoint` | [URI](https://raw.githubusercontent.com/eoap/schemas/main/string_format.yaml#URI):<ul><li>`value`: [string](https://www.commonwl.org/v1.2/Workflow.html#CWLType)</li></ul> |
+| `osc_location` | `--output` | [Directory](https://www.commonwl.org/v1.2/Workflow.html#Directory) |
+| `cwl_workflow_location` | `--cwl_workflow_location` | [URI](https://raw.githubusercontent.com/eoap/schemas/main/string_format.yaml#URI):<ul><li>`value`: [string](https://www.commonwl.org/v1.2/Workflow.html#CWLType)</li></ul> |
+| `experiment_id` | `--experiment-id` | [string](https://www.commonwl.org/v1.2/Workflow.html#CWLType) |
+| `authorization_token` | `--authorization-token` | [string](https://www.commonwl.org/v1.2/Workflow.html#CWLType) |
+
+### Execution usage example:
+
+```
+uv run --no-cache --no-project --with osc-metadata-client osc-metadata-client <ARGUMENT_DYNAMICALLY_SET> \
+--id <JOB_ID> \
+--project-id <PROJECT_ID> \
+--project-name <PROJECT_NAME> \
+--ogc-api-processes-endpoint <OGC_API_PROCESSES_ENDPOINT> \
+--output <OSC_LOCATION> \
+--cwl_workflow_location <CWL_WORKFLOW_LOCATION> \
+--experiment-id <EXPERIMENT_ID> \
 --authorization-token <AUTHORIZATION_TOKEN>
 ```
 
@@ -263,7 +263,7 @@ uv run --no-cache --no-project --with osc-client osc-client <ARGUMENT_DYNAMICALL
 ### Execution usage example:
 
 ```
-bash run.sh \
+bash commit_and_push_cli.sh \
 --commit_message <COMMIT_MESSAGE>
 ```
 

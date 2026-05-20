@@ -4,7 +4,7 @@ ESA Open Science Catalog Client
 
 > This software is licensed under the terms of the [Apache License 2.0](https://www.apache.org/licenses/LICENSE-2.0) license - SPDX short identifier: [Apache-2.0](https://spdx.org/licenses/Apache-2.0)
 >
-> 2026-05-12 - 2026-05-19T15:43:40.636 Copyright [Terradue Srl](mailto:info@terradue.com) - > [https://ror.org/0069cx113](https://ror.org/0069cx113)
+> 2026-05-12 - 2026-05-20T14:38:54.887 Copyright [Terradue Srl](mailto:info@terradue.com) - > [https://ror.org/0069cx113](https://ror.org/0069cx113)
 
 ## Project Team
 
@@ -23,7 +23,7 @@ The are no contributors for this project.
 
 ## User Manual
 
-User Manual can be found on [https://terradue.github.io/osc-client/](https://terradue.github.io/osc-client/).
+User Manual can be found on [https://terradue.github.io/osc-metadata-client/](https://terradue.github.io/osc-metadata-client/).
 
 
 ## Runtime environment
@@ -41,9 +41,9 @@ User Manual can be found on [https://terradue.github.io/osc-client/](https://ter
 
 ## Software Source code
 
-- Browsable version of the [source repository](https://github.com/Terradue/osc-client.git);
-- [Continuous integration](https://github.com/Terradue/osc-client/actions) system used by the project;
-- Issues, bugs, and feature requests should be submitted to the following [issue management](https://github.com/Terradue/osc-client/issues) system for this project
+- Browsable version of the [source repository](https://github.com/Terradue/osc-metadata-client.git);
+- [Continuous integration](https://github.com/Terradue/osc-metadata-client/actions) system used by the project;
+- Issues, bugs, and feature requests should be submitted to the following [issue management](https://github.com/Terradue/osc-metadata-client/issues) system for this project
 
 
 ---
@@ -158,7 +158,7 @@ Learn more about the [State diagram](https://en.wikipedia.org/wiki/State_diagram
 ### Execution usage example:
 
 ```
-bash run.sh \
+bash sync_git_repository_cli.sh \
 ```
 
 ### Run in step
@@ -187,7 +187,7 @@ bash run.sh \
 ### Execution usage example:
 
 ```
-uv run --no-cache --no-project --with osc-client osc-client <ARGUMENT_DYNAMICALLY_SET> \
+uv run --no-cache --no-project --with osc-metadata-client osc-metadata-client <ARGUMENT_DYNAMICALLY_SET> \
 --id <WORKFLOW_ID> \
 --project-id <PROJECT_ID> \
 --project-name <PROJECT_NAME> \
@@ -217,7 +217,7 @@ uv run --no-cache --no-project --with osc-client osc-client <ARGUMENT_DYNAMICALL
 ### Execution usage example:
 
 ```
-bash run.sh \
+bash commit_and_push_cli.sh \
 --commit_message <COMMIT_MESSAGE>
 ```
 
