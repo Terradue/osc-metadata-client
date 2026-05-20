@@ -127,6 +127,7 @@ $graph:
       inputBinding:
         position: 4
         prefix: --ogc-api-processes-endpoint
+        valueFrom: $(self.value)
     osc_location:
       type: Directory
       inputBinding:
@@ -137,6 +138,7 @@ $graph:
       type: https://raw.githubusercontent.com/eoap/schemas/main/string_format.yaml#URI
       inputBinding:
         position: 6
+        valueFrom: $(self.value)
   stdout: publish_workflow_cli.log
   outputs:
     log:

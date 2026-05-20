@@ -127,6 +127,7 @@ $graph:
       inputBinding:
         position: 4
         prefix: --ogc-api-processes-endpoint
+        valueFrom: $(self.value)
     osc_location:
       type: Directory
       inputBinding:
@@ -136,6 +137,7 @@ $graph:
       type: https://raw.githubusercontent.com/eoap/schemas/main/string_format.yaml#URI
       inputBinding:
         position: 6
+        valueFrom: $(self.value)
     workflow_id:
       type: string
       inputBinding:
@@ -200,6 +202,7 @@ $graph:
       inputBinding:
         position: 4
         prefix: --ogc-api-processes-endpoint
+        valueFrom: $(self.value)
     osc_location:
       type: Directory
       inputBinding:
@@ -209,6 +212,7 @@ $graph:
       type: https://raw.githubusercontent.com/eoap/schemas/main/string_format.yaml#URI
       inputBinding:
         position: 6
+        valueFrom: $(self.value)
     experiment_id:
       type: string
       inputBinding:
