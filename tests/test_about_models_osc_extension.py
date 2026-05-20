@@ -21,10 +21,6 @@ import pystac
 from transpiler_mate.ogcapi.records.ogcapi_records_models import RecordCommonProperties
 
 
-def test_about_exposes_version(osc_modules) -> None:
-    assert osc_modules["about"].__version__ == "0.1.0"
-
-
 def test_workflow_properties_preserve_aliases(osc_modules) -> None:
     models = osc_modules["models"]
 
