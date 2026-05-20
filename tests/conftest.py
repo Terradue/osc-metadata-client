@@ -162,7 +162,9 @@ def osc_modules():
         "osc_metadata_client.themes_extension", SRC_DIR / "themes_extension.py"
     )
     workflow = _load_module("osc_metadata_client.workflow", SRC_DIR / "workflow.py")
-    experiment = _load_module("osc_metadata_client.experiment", SRC_DIR / "experiment.py")
+    experiment = _load_module(
+        "osc_metadata_client.experiment", SRC_DIR / "experiment.py"
+    )
     product = _load_module("osc_metadata_client.product", SRC_DIR / "product.py")
     cli = _load_module("osc_metadata_client.cli", SRC_DIR / "cli.py")
 
