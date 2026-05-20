@@ -3,7 +3,7 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "osc-client"
+name = "osc-metadata-client"
 dynamic = ["version"]
 description = 'Open Science Catalog client'
 readme = "README.md"
@@ -39,34 +39,34 @@ dependencies = [
 allow-direct-references = true
 
 [project.urls]
-Documentation = "https://github.com/Terradue/osc-client#readme"
-Issues = "https://github.com/Terradue/osc-client/issues"
-Source = "https://github.com/Terradue/osc-client"
+Documentation = "https://github.com/Terradue/osc-metadata-client#readme"
+Issues = "https://github.com/Terradue/osc-metadata-client/issues"
+Source = "https://github.com/Terradue/osc-metadata-client"
 
 [project.scripts]
-osc-client = "osc_client.cli:main"
+osc-metadata-client = "osc_metadata_client.cli:main"
 
 [tool.hatch.version]
-path = "src/osc_client/__about__.py"
+path = "src/osc_metadata_client/__about__.py"
 
 [tool.hatch.envs.types]
 extra-dependencies = [
   "mypy>=1.0.0",
 ]
 [tool.hatch.envs.types.scripts]
-check = "mypy --install-types --non-interactive {args:src/osc_client tests}"
+check = "mypy --install-types --non-interactive {args:src/osc_metadata_client tests}"
 
 [tool.coverage.run]
-source_pkgs = ["osc_client", "tests"]
+source_pkgs = ["osc_metadata_client", "tests"]
 branch = true
 parallel = true
 omit = [
-  "src/osc_client/__about__.py",
+  "src/osc_metadata_client/__about__.py",
 ]
 
 [tool.coverage.paths]
-osc_client = ["src/osc_client", "*/osc-client/src/osc_client"]
-tests = ["tests", "*/osc-client/tests"]
+osc_metadata_client = ["src/osc_metadata_client", "*/osc-metadata-client/src/osc_metadata_client"]
+tests = ["tests", "*/osc-metadata-client/tests"]
 
 [tool.coverage.report]
 exclude_lines = [

@@ -17,7 +17,7 @@ $graph:
     InlineJavascriptRequirement: {}
     InitialWorkDirRequirement:
       listing:
-      - entryname: run.sh
+      - entryname: sync_git_repository_cli.sh
         entry: |-
           #!/bin/bash
           set -euo pipefail
@@ -32,19 +32,15 @@ $graph:
             git -C "$REPOSITORY_PATH" fetch "$REMOTE" "$BRANCH"
             git -C "$REPOSITORY_PATH" checkout "$BRANCH" || git -C "$REPOSITORY_PATH" checkout -b "$BRANCH" "$REMOTE/$BRANCH"
             git -C "$REPOSITORY_PATH" pull --ff-only "$REMOTE" "$BRANCH"
-          elif [ -e "$REPOSITORY_PATH" ]; then
-            echo "Path exists but is not a Git repository: $REPOSITORY_PATH" >&2
-            exit 1
           else
             echo "Cloning $REPOSITORY_URL into $REPOSITORY_PATH"
-            mkdir -p "\$(dirname "$REPOSITORY_PATH")"
             git clone --branch "$BRANCH" "$REPOSITORY_URL" "$REPOSITORY_PATH"
           fi
 
           printf '%s' "$REPOSITORY_PATH" > repository_path.txt
-  baseCommand:
-  - bash
-  - run.sh
+  baseCommand: bash
+  arguments:
+  - sync_git_repository_cli.sh
   inputs: []
   stdout: sync_git_repository_cli.log
   outputs:
@@ -84,7 +80,7 @@ $graph:
       networkAccess: true
     InitialWorkDirRequirement:
       listing:
-      - entryname: run.sh
+      - entryname: commit_and_push_cli.sh
         entry: |-
           #!/bin/bash
           set -euo pipefail
@@ -130,9 +126,9 @@ $graph:
           git -C "$REPOSITORY_PATH" commit -m "$commit_message"
           git -C "$REPOSITORY_PATH" push --set-upstream "$REMOTE" "$BRANCH"
           printf 'true' > changes_pushed.txt
-  baseCommand:
-  - bash
-  - run.sh
+  baseCommand: bash
+  arguments:
+  - commit_and_push_cli.sh
   inputs:
     commit_message:
       type: string
@@ -166,7 +162,7 @@ $graph:
       networkAccess: true
     InitialWorkDirRequirement:
       listing:
-      - entryname: run.sh
+      - entryname: create_pull_request_cli.sh
         entry: |-
           #!/bin/bash
           set -euo pipefail
@@ -203,9 +199,9 @@ $graph:
               echo "Created Pull Request: $pull_request_url"
             fi
           )
-  baseCommand:
-  - bash
-  - run.sh
+  baseCommand: bash
+  arguments:
+  - create_pull_request_cli.sh
   inputs:
     pull_request_title:
       type: string

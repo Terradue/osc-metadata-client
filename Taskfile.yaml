@@ -28,14 +28,9 @@ tasks:
         BASE_CLASS: 'transpiler_mate.ogcapi.records.ogcapi_records_models.RecordCommonProperties'
         OUTPUT: './src/osc_client/models.py'
 
-  generate_workflow_doc:
+  bundle_worflow:
     internal: true
-    vars:
-      DOC_DIR: './docs/c4/components/workflow'
-      REPO_URL:
-        sh: git config --get remote.origin.url
     cmds:
-    - mkdir -p {{.DOC_DIR}}
     - |
       uv run \
       --no-cache \
@@ -44,6 +39,18 @@ tasks:
       cwl-loader bundle \
       ./cwl-workflows/{{.WORKFLOW_ID}}.cwl \
       --output ./cwl-workflows/{{.WORKFLOW_ID}}_bundled.cwl
+
+  generate_workflow_doc:
+    internal: true
+    vars:
+      DOC_DIR: './docs/c4/components/workflow'
+      REPO_URL:
+        sh: git config --get remote.origin.url
+    cmds:
+    - task: bundle_worflow
+      vars:
+        WORKFLOW_ID: "{{.WORKFLOW_ID}}"
+    - mkdir -p {{.DOC_DIR}}
     - |
       uv run \
       --no-cache \
@@ -77,6 +84,118 @@ tasks:
       task: generate_workflow_doc
       vars:
         WORKFLOW_ID: '{{.WORKFLOW_ID}}'
+
+  publish_workflow:
+    desc: Invoke the bundled publish_workflow CWL workflow
+    requires:
+      vars:
+      - WORKFLOW_ID
+      - PROJECT_ID
+      - PROJECT_NAME
+      - OGC_API_PROCESSES_ENDPOINT
+      - CWL_WORKFLOW_LOCATION
+    cmds:
+    - task: bundle_worflow
+      vars:
+        WORKFLOW_ID: "publish_workflow"
+    - |
+      set -eu
+
+      set -a
+      . ./cwl-workflows/.env
+      set +a
+
+      job_order="$(mktemp --suffix=.json publish_workflow.XXXXXXX)"
+      trap 'rm -f "$job_order"' EXIT
+
+      jq -n \
+      --arg workflow_id {{shellQuote .WORKFLOW_ID}} \
+      --arg project_id {{shellQuote .PROJECT_ID}} \
+      --arg project_name {{shellQuote .PROJECT_NAME}} \
+      --arg ogc_api_processes_endpoint {{shellQuote .OGC_API_PROCESSES_ENDPOINT}} \
+      --arg cwl_workflow_location {{shellQuote .CWL_WORKFLOW_LOCATION}} \
+      '{
+        workflow_id: $workflow_id,
+        project_id: $project_id,
+        project_name: $project_name,
+        ogc_api_processes_endpoint: {
+          value: $ogc_api_processes_endpoint
+        },
+        cwl_workflow_location: {
+          value: $cwl_workflow_location
+        }
+      }' > "$job_order"
+
+      uv run \
+      --no-cache \
+      --no-project \
+      --with cwltool \
+      cwltool \
+      --preserve-environment REPOSITORY_PATH \
+      --preserve-environment REPOSITORY_URL \
+      --preserve-environment BRANCH \
+      --preserve-environment REMOTE \
+      ./cwl-workflows/publish_workflow_bundled.cwl#publish_workflow \
+      "$job_order"
+
+  publish_experiment_products:
+    desc: Invoke the bundled publish_experiment_products CWL workflow
+    requires:
+      vars:
+      - JOB_ID
+      - PROJECT_ID
+      - PROJECT_NAME
+      - OGC_API_PROCESSES_ENDPOINT
+      - CWL_WORKFLOW_LOCATION
+      - WORKFLOW_ID
+      - AUTHORIZATION_TOKEN
+    cmds:
+    - task: bundle_worflow
+      vars:
+        WORKFLOW_ID: "publish_experiment_products"
+    - |
+      set -eu
+
+      set -a
+      . ./cwl-workflows/.env
+      set +a
+
+      job_order="$(mktemp --suffix=.json publish_experiment_products.XXXXXXX)"
+      trap 'rm -f "$job_order"' EXIT
+
+      jq -n \
+      --arg job_id {{shellQuote .JOB_ID}} \
+      --arg project_id {{shellQuote .PROJECT_ID}} \
+      --arg project_name {{shellQuote .PROJECT_NAME}} \
+      --arg ogc_api_processes_endpoint {{shellQuote .OGC_API_PROCESSES_ENDPOINT}} \
+      --arg cwl_workflow_location {{shellQuote .CWL_WORKFLOW_LOCATION}} \
+      --arg workflow_id {{shellQuote .WORKFLOW_ID}} \
+      --arg authorization_token {{shellQuote .AUTHORIZATION_TOKEN}} \
+      '{
+        job_id: $job_id,
+        project_id: $project_id,
+        project_name: $project_name,
+        ogc_api_processes_endpoint: {
+          value: $ogc_api_processes_endpoint
+        },
+        cwl_workflow_location: {
+          value: $cwl_workflow_location
+        },
+        workflow_id: $workflow_id,
+        authorization_token: $authorization_token
+      }' > "$job_order"
+
+      uv run \
+      --no-cache \
+      --no-project \
+      --with cwltool \
+      cwltool \
+      --preserve-environment REPOSITORY_PATH \
+      --preserve-environment REPOSITORY_URL \
+      --preserve-environment BRANCH \
+      --preserve-environment REMOTE \
+      ./cwl-workflows/publish_experiment_products_bundled.cwl#publish_experiment_products \
+      "$job_order"
 
   serve_docs:
     desc: Serve the MkDocs site locally

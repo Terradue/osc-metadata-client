@@ -39,7 +39,7 @@ s:softwareVersion: 0.1.0
 s:softwareHelp:
   '@type': s:CreativeWork
   s:name: User Manual
-  s:url: https://terradue.github.io/osc-client/
+  s:url: https://terradue.github.io/osc-metadata-client/
 
 # Publisher
 
@@ -93,11 +93,16 @@ $graph:
     NetworkAccess:
       networkAccess: true
     DockerRequirement:
-      dockerPull: ghcr.io/terradue/osc-client:latest 
+      dockerPull: ghcr.io/terradue/osc-metadata-client:latest 
     SchemaDefRequirement:
       types:
       - $import: https://raw.githubusercontent.com/eoap/schemas/main/string_format.yaml
-  baseCommand: osc-client
+  baseCommand:
+  - uv run
+  - --no-cache
+  - --no-project
+  - --with osc-metadata-client
+  - osc-metadata-client
   arguments:
   - valueFrom: experiment
     position: 7
@@ -161,11 +166,16 @@ $graph:
     NetworkAccess:
       networkAccess: true
     DockerRequirement:
-      dockerPull: ghcr.io/terradue/osc-client:latest 
+      dockerPull: ghcr.io/terradue/osc-metadata-client:latest 
     SchemaDefRequirement:
       types:
       - $import: https://raw.githubusercontent.com/eoap/schemas/main/string_format.yaml
-  baseCommand: 'osc-client'
+  baseCommand:
+  - uv run
+  - --no-cache
+  - --no-project
+  - --with osc-metadata-client
+  - osc-metadata-client
   arguments:
   - valueFrom: products
     position: 7
@@ -226,9 +236,11 @@ $graph:
 
     For more information, see [Experiments](https://opensciencedata.esa.int/experiments/catalog) and [Products](https://opensciencedata.esa.int/products/catalog).
   requirements:
+    MultipleInputFeatureRequirement: {}
     SchemaDefRequirement:
       types:
       - $import: https://raw.githubusercontent.com/eoap/schemas/main/string_format.yaml
+    StepInputExpressionRequirement: {}
   inputs:
     job_id:
       type: string
@@ -292,6 +304,8 @@ $graph:
           - workflow_id
           - project_name
           - project_id
+          - publish_experiment/log
+          - publish_product/log
           linkMerge: merge_nested
           valueFrom: Publish experiment and result job_id for $(self[0]) workflow $(self[1]) for project $(self[2]) ($(self[3]))
       out:

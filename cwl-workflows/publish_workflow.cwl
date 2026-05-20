@@ -39,7 +39,7 @@ s:softwareVersion: 0.1.0
 s:softwareHelp:
   '@type': s:CreativeWork
   s:name: User Manual
-  s:url: https://terradue.github.io/osc-client/
+  s:url: https://terradue.github.io/osc-metadata-client/
 
 # Publisher
 
@@ -92,13 +92,18 @@ $graph:
   requirements:
     NetworkAccess:
       networkAccess: true
-    DockerRequirement:
-      dockerPull: ghcr.io/terradue/osc-client:latest 
     SchemaDefRequirement:
       types:
       - $import: https://raw.githubusercontent.com/eoap/schemas/main/string_format.yaml
-  baseCommand: osc-client
+  baseCommand:
+  - uv
   arguments:
+  - run
+  - --no-cache
+  - --no-project
+  - --with
+  - osc-metadata-client
+  - osc-metadata-client
   - valueFrom: workflow
     position: 7
   inputs:
@@ -197,6 +202,7 @@ $graph:
           - workflow_id
           - project_name
           - project_id
+          - publish_workflow/log
           linkMerge: merge_nested
           valueFrom: Publish workflow $(self[0]) for project $(self[1]) ($(self[2]))
       out:
