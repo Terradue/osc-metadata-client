@@ -30,6 +30,9 @@ tasks:
 
   bundle_worflow:
     internal: true
+    preconditions:
+    - sh: command -v uv >/dev/null 2>&1
+      msg: "Missing uv, see https://docs.astral.sh/uv/"
     cmds:
     - |
       uv run \
@@ -37,11 +40,14 @@ tasks:
       --no-project \
       --with "cwl-loader==0.19.0" \
       cwl-loader bundle \
-      ./cwl-workflows/{{.WORKFLOW_ID}}.cwl \
-      --output ./cwl-workflows/{{.WORKFLOW_ID}}_bundled.cwl
+      ./cwl-workflow_templates/{{.WORKFLOW_ID}}.cwl \
+      --output ./cwl-workflow/{{.WORKFLOW_ID}}.cwl
 
   generate_workflow_doc:
     internal: true
+    preconditions:
+    - sh: command -v uv >/dev/null 2>&1
+      msg: "Missing uv, see https://docs.astral.sh/uv/"
     vars:
       DOC_DIR: './docs/c4/components/workflow'
       REPO_URL:
@@ -56,19 +62,19 @@ tasks:
       --no-cache \
       --no-project \
       --with cwltool \
-      cwltool --validate ./cwl-workflows/{{.WORKFLOW_ID}}_bundled.cwl
+      cwltool --validate ./cwl-workflow/{{.WORKFLOW_ID}}.cwl
     - |
       uv run --no-cache --no-project --with transpiler-mate transpiler-mate markdown \
         --workflow-id {{.WORKFLOW_ID}} \
         --output {{.DOC_DIR}} \
         --code-repository {{.REPO_URL}} \
-        ./cwl-workflows/{{.WORKFLOW_ID}}_bundled.cwl
+        ./cwl-workflow/{{.WORKFLOW_ID}}.cwl
     - |
       uv run --no-cache --no-project --with cwl2puml cwl2puml --workflow-id {{.WORKFLOW_ID}} \
         --output {{.DOC_DIR}}/{{.WORKFLOW_ID}} \
         --convert-image \
         --image-format svg \
-        ./cwl-workflows/{{.WORKFLOW_ID}}_bundled.cwl
+        ./cwl-workflow/{{.WORKFLOW_ID}}.cwl
     - rm -rf {{.DOC_DIR}}/{{.WORKFLOW_ID}}/*.puml
 
   generate_workflows_doc:
@@ -87,6 +93,11 @@ tasks:
 
   publish_workflow:
     desc: Invoke the bundled publish_workflow CWL workflow
+    preconditions:
+    - sh: command -v uv >/dev/null 2>&1
+      msg: "Missing uv, see https://docs.astral.sh/uv/"
+    - sh: command -v jq >/dev/null 2>&1
+      msg: "Missing jq, see https://jqlang.org/"
     requires:
       vars:
       - WORKFLOW_ID
@@ -140,6 +151,11 @@ tasks:
 
   publish_experiment_products:
     desc: Invoke the bundled publish_experiment_products CWL workflow
+    preconditions:
+    - sh: command -v uv >/dev/null 2>&1
+      msg: "Missing uv, see https://docs.astral.sh/uv/"
+    - sh: command -v jq >/dev/null 2>&1
+      msg: "Missing jq, see https://jqlang.org/"
     requires:
       vars:
       - JOB_ID
@@ -199,6 +215,9 @@ tasks:
 
   serve_docs:
     desc: Serve the MkDocs site locally
+    preconditions:
+    - sh: command -v uv >/dev/null 2>&1
+      msg: "Missing uv, see https://docs.astral.sh/uv/"
     cmds:
       - |
         uv run \

@@ -4,7 +4,7 @@ ESA Open Science Catalog Client
 
 > This software is licensed under the terms of the [Apache License 2.0](https://www.apache.org/licenses/LICENSE-2.0) license - SPDX short identifier: [Apache-2.0](https://spdx.org/licenses/Apache-2.0)
 >
-> 2026-05-12 - 2026-05-20T14:38:54.887 Copyright [Terradue Srl](mailto:info@terradue.com) - > [https://ror.org/0069cx113](https://ror.org/0069cx113)
+> 2026-05-12 - 2026-05-21T15:35:26.453 Copyright [Terradue Srl](mailto:info@terradue.com) - > [https://ror.org/0069cx113](https://ror.org/0069cx113)
 
 ## Project Team
 
@@ -187,7 +187,7 @@ bash sync_git_repository_cli.sh \
 ### Execution usage example:
 
 ```
-uv run --no-cache --no-project --with osc-metadata-client osc-metadata-client <ARGUMENT_DYNAMICALLY_SET> \
+osc-metadata-client <ARGUMENT_DYNAMICALLY_SET> \
 --id <WORKFLOW_ID> \
 --project-id <PROJECT_ID> \
 --project-name <PROJECT_NAME> \

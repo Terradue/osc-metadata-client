@@ -7,7 +7,7 @@ schemas:
 
 # The software itself
 
-s:name: OSC Client - Publish `workflow`
+s:name: OSC Client - Publish `experiment` and `product`
 s:description: ESA Open Science Catalog Client
 s:dateCreated: '2026-05-12'
 s:license:
@@ -83,31 +83,27 @@ s:author:
 
 $graph:
 - class: CommandLineTool
-  id: publish_workflow_cli
-  label: Open Science Catalog `workflow` publication
+  id: publish_experiment_cli
+  label: Open Science Catalog `experiment` publication
   doc: |
-    Publishes a `process` to the the [Open Science Catalog](https://opensciencedata.esa.int/) as a `workflow`.
+    Publishes a `job` execution to the the [Open Science Catalog](https://opensciencedata.esa.int/) as a `experiment`.
 
-    For more information, see [Workflows](https://opensciencedata.esa.int/workflows/catalog).
+    For more information, see [Experiments](https://opensciencedata.esa.int/experiments/catalog).
   requirements:
+    DockerRequirement:
+      dockerPull: docker.io/library/osc-metadata-client:latest 
     NetworkAccess:
       networkAccess: true
     SchemaDefRequirement:
       types:
       - $import: https://raw.githubusercontent.com/eoap/schemas/main/string_format.yaml
   baseCommand:
-  - uv
+  - osc-metadata-client
   arguments:
-  - run
-  - --no-cache
-  - --no-project
-  - --with
-  - osc-metadata-client
-  - osc-metadata-client
-  - valueFrom: workflow
+  - valueFrom: experiment
     position: 7
   inputs:
-    workflow_id:
+    job_id:
       type: string
       inputBinding:
         position: 1
@@ -133,28 +129,108 @@ $graph:
       inputBinding:
         position: 5
         prefix: --output
-        valueFrom: $(self.location)
     cwl_workflow_location:
       type: https://raw.githubusercontent.com/eoap/schemas/main/string_format.yaml#URI
       inputBinding:
         position: 6
         valueFrom: $(self.value)
-  stdout: publish_workflow_cli.log
+    workflow_id:
+      type: string
+      inputBinding:
+        position: 8
+        prefix: --workflow-id
+    authorization_token:
+      type: string
+      inputBinding:
+        position: 9
+        prefix: --authorization-token
+  stdout: publish_experiment_cli.log
   outputs:
     log:
       type: string
       outputBinding:
-        glob: publish_workflow_cli.log
+        glob: publish_experiment_cli.log
+        loadContents: true
+        outputEval: $(self[0].contents)
+
+- class: CommandLineTool
+  id: publish_product_cli
+  label: Open Science Catalog `product` publication
+  doc: |
+    Publishes a `job` to the the [Open Science Catalog](https://opensciencedata.esa.int/) as a `product`.
+
+    For more information, see [Products](https://opensciencedata.esa.int/products/catalog).
+  requirements:
+    DockerRequirement:
+      dockerPull: docker.io/library/osc-metadata-client:latest 
+    NetworkAccess:
+      networkAccess: true
+    SchemaDefRequirement:
+      types:
+      - $import: https://raw.githubusercontent.com/eoap/schemas/main/string_format.yaml
+  baseCommand:
+  - osc-metadata-client
+  arguments:
+  - valueFrom: products
+    position: 7
+  inputs:
+    job_id:
+      type: string
+      inputBinding:
+        position: 1
+        prefix: --id
+    project_id:
+      type: string
+      inputBinding:
+        position: 2
+        prefix: --project-id
+    project_name:
+      type: string
+      inputBinding:
+        position: 3
+        prefix: --project-name
+    ogc_api_processes_endpoint:
+      type: https://raw.githubusercontent.com/eoap/schemas/main/string_format.yaml#URI
+      inputBinding:
+        position: 4
+        prefix: --ogc-api-processes-endpoint
+        valueFrom: $(self.value)
+    osc_location:
+      type: Directory
+      inputBinding:
+        position: 5
+        prefix: --output
+    cwl_workflow_location:
+      type: https://raw.githubusercontent.com/eoap/schemas/main/string_format.yaml#URI
+      inputBinding:
+        position: 6
+        valueFrom: $(self.value)
+    experiment_id:
+      type: string
+      inputBinding:
+        position: 8
+        prefix: --experiment-id
+    authorization_token:
+      type: string
+      inputBinding:
+        position: 9
+        prefix: --authorization-token
+  stdout: publish_product_cli.log
+  outputs:
+    log:
+      type: string
+      outputBinding:
+        glob: publish_product_cli.log
         loadContents: true
         outputEval: $(self[0].contents)
 
 - class: Workflow
-  id: publish_workflow
-  label: Open Science Catalog `workflow` publication
+  id: publish_experiment_products
+  label: Open Science Catalog `experiment` and `product` publication
   doc: |
-    Publishes a `process` to the the [Open Science Catalog](https://opensciencedata.esa.int/) as a `workflow`.
+    Publishes a `job` execution to the [Open Science Catalog](https://opensciencedata.esa.int/) as an `experiment` and its `product`.
 
-    For more information, see [Workflows](https://opensciencedata.esa.int/workflows/catalog).
+    For more information, see [Experiments](https://opensciencedata.esa.int/experiments/catalog) and [Products](https://opensciencedata.esa.int/products/catalog).
   requirements:
     MultipleInputFeatureRequirement: {}
     SchemaDefRequirement:
@@ -162,7 +238,7 @@ $graph:
       - $import: https://raw.githubusercontent.com/eoap/schemas/main/string_format.yaml
     StepInputExpressionRequirement: {}
   inputs:
-    workflow_id:
+    job_id:
       type: string
     project_id:
       type: string
@@ -172,28 +248,47 @@ $graph:
       type: https://raw.githubusercontent.com/eoap/schemas/main/string_format.yaml#URI
     cwl_workflow_location:
       type: https://raw.githubusercontent.com/eoap/schemas/main/string_format.yaml#URI
+    workflow_id:
+      type: string
+    authorization_token:
+      type: string
   outputs:
-    publish_workflow_log:
+    publish_experiment_log:
       type: string
-      outputSource: publish_workflow/log
-    changes_pushed:
+      outputSource: publish_experiment/log
+    publish_product_log:
       type: string
-      outputSource: commit_and_push/changes_pushed
+      outputSource: publish_product/log
   steps:
     sync_git_repository:
       run: git_repository.cwl#sync_git_repository_cli
       in: []
       out:
       - checkout_directory
-    publish_workflow:
-      run: "#publish_workflow_cli"
+    publish_experiment:
+      run: "#publish_experiment_cli"
       in:
-        workflow_id: workflow_id
+        job_id: job_id
         project_id: project_id
         project_name: project_name
         ogc_api_processes_endpoint: ogc_api_processes_endpoint
         osc_location: sync_git_repository/checkout_directory
         cwl_workflow_location: cwl_workflow_location
+        workflow_id: workflow_id
+        authorization_token: authorization_token
+      out:
+      - log
+    publish_product:
+      run: "#publish_product_cli"
+      in:
+        job_id: job_id
+        project_id: project_id
+        project_name: project_name
+        ogc_api_processes_endpoint: ogc_api_processes_endpoint
+        osc_location: sync_git_repository/checkout_directory
+        cwl_workflow_location: cwl_workflow_location
+        experiment_id: job_id
+        authorization_token: authorization_token
       out:
       - log
     commit_and_push:
@@ -201,11 +296,13 @@ $graph:
       in:
         commit_message:
           source:
+          - job_id
           - workflow_id
           - project_name
           - project_id
-          - publish_workflow/log
+          - publish_experiment/log
+          - publish_product/log
           linkMerge: merge_nested
-          valueFrom: Publish workflow $(self[0]) for project $(self[1]) ($(self[2]))
+          valueFrom: Publish experiment and result job_id for $(self[0]) workflow $(self[1]) for project $(self[2]) ($(self[3]))
       out:
       - changes_pushed
