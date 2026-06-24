@@ -28,7 +28,7 @@ classifiers = [
 dependencies = [
   "click==8.3.3",
   "loguru==0.7.3",
-  "ogc-api-processes-client==0.5.0",
+  "ogc-api-processes-client==0.6.0",
   "pydantic==2.12.5",
   "session-adapters==0.3.0",
   "transpiler-mate==0.44.0",
