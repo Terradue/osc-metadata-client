@@ -206,7 +206,7 @@ def test_load_record_geojson_enriches_transpiled_record(
     monkeypatch.setattr(package, "Session", FakeSession)
     monkeypatch.setattr(package, "MetadataManager", FakeMetadataManager)
     monkeypatch.setattr(package, "OgcRecordsTranspiler", FakeTranspiler)
-    monkeypatch.setattr(package, "OCIAdapter", lambda: object())
+    monkeypatch.setattr(package, "OCIAdapter", lambda **kwargs: object())
 
     loaded = package.load_record_geojson(
         "https://example.com/workflow.cwl", "proj", "Project"

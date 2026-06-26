@@ -12,4 +12,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-__version__ = "0.4.0"
+version: '3'
+
+includes:
+  quality: https://raw.githubusercontent.com/Terradue/taskfile-utils/refs/heads/main/quality.yaml
+
+tasks:
+
+  default:
+    cmds:
+    - task: quality:check
+    - task: quality:lint
+    - task: quality:test

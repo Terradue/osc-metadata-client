@@ -38,9 +38,11 @@ def test_main_loads_context(monkeypatch, tmp_path, osc_modules) -> None:
     record = make_record("original-id")
     called = {}
 
-    monkeypatch.setattr(
-        cli, "load_record_geojson", lambda source, project_id, project_name: record
-    )
+    def fake_load_record_geojson(*args):
+        called["load_record_geojson_args"] = args
+        return record
+
+    monkeypatch.setattr(cli, "load_record_geojson", fake_load_record_geojson)
     monkeypatch.setattr(
         cli,
         "execute_workflow",
@@ -68,12 +70,26 @@ def test_main_loads_context(monkeypatch, tmp_path, osc_modules) -> None:
             "https://example.com/processes",
             "--output",
             str(tmp_path),
+            "--oci-hostname",
+            "registry.example.com",
+            "--oci-username",
+            "neo",
+            "--oci-password",
+            "secret",
             "https://example.com/workflow.cwl",
             "workflow",
         ],
     )
 
     assert result.exit_code == 0
+    assert called["load_record_geojson_args"] == (
+        "https://example.com/workflow.cwl",
+        "project-1",
+        "Project",
+        "registry.example.com",
+        "neo",
+        "secret",
+    )
     assert called["source"] == "https://example.com/workflow.cwl"
     assert called["ogc_api_processes_endpoint"] == "https://example.com/processes"
     assert called["record_geojson"].id == "workflow-1"
@@ -87,9 +103,7 @@ def test_experiment_command_dispatches(monkeypatch, tmp_path, osc_modules) -> No
     record = make_record("experiment-1")
     called = {}
 
-    monkeypatch.setattr(
-        cli, "load_record_geojson", lambda source, project_id, project_name: record
-    )
+    monkeypatch.setattr(cli, "load_record_geojson", lambda *args: record)
     monkeypatch.setattr(
         cli,
         "execute_experiment",
@@ -133,9 +147,7 @@ def test_products_command_dispatches(monkeypatch, tmp_path, osc_modules) -> None
     record = make_record("product-1")
     called = {}
 
-    monkeypatch.setattr(
-        cli, "load_record_geojson", lambda source, project_id, project_name: record
-    )
+    monkeypatch.setattr(cli, "load_record_geojson", lambda *args: record)
     monkeypatch.setattr(
         cli,
         "execute_product",

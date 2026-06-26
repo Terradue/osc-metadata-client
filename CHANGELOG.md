@@ -13,6 +13,7 @@ and this project uses SemVer-style release tags.
   structure contract.
 - Regenerated CWL workflow documentation.
 - Updated the `ogc-api-processes-client` dependency.
+- OCI credentials via CLI
 
 ### Fixed
 

@@ -80,7 +80,12 @@ def retrieve_status_info(api_client: ApiClient, job_id: str) -> StatusInfo:
 
 
 def load_record_geojson(
-    source: str, project_id: str, project_name: str
+    source: str,
+    project_id: str,
+    project_name: str,
+    oci_hostname: str | None = None,
+    oci_username: str | None = None,
+    oci_password: str | None = None,
 ) -> RecordGeoJSON:
     session: Session = Session()
 
@@ -95,7 +100,10 @@ def load_record_geojson(
     mount_session("http://", http_adapter)
     mount_session("https://", http_adapter)
     mount_session("file://", FileAdapter())
-    mount_session("oci://", OCIAdapter())
+    mount_session(
+        "oci://",
+        OCIAdapter(hostname=oci_hostname, username=oci_username, password=oci_password),
+    )
 
     logger.debug(f"> GET {source}...")
 

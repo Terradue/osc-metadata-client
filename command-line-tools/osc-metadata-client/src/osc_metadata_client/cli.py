@@ -52,6 +52,9 @@ import click
     required=True,
     help="The output directory path",
 )
+@click.option("--oci-hostname", envvar="OCI_HOSTNAME", show_envvar=True)
+@click.option("--oci-username", envvar="OCI_USERNAME", show_envvar=True)
+@click.option("--oci-password", envvar="OCI_PASSWORD", show_envvar=True)
 @click.pass_context
 def main(
     ctx,
@@ -61,12 +64,15 @@ def main(
     project_name: str,
     ogc_api_processes_endpoint: str,
     output: Path,
+    oci_hostname: str | None,
+    oci_username: str | None,
+    oci_password: str | None,
 ):
     ctx.ensure_object(dict)
     ctx.obj["source"] = source
 
     record_geojson: RecordGeoJSON = load_record_geojson(
-        source, project_id, project_name
+        source, project_id, project_name, oci_hostname, oci_username, oci_password
     )
     record_geojson.id = id
     ctx.obj["record_geojson"] = record_geojson
