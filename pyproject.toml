@@ -32,7 +32,7 @@ dependencies = [
   "pydantic==2.12.5",
   "session-adapters==0.3.0",
   "transpiler-mate==0.44.0",
-  "pystac==1.14.3"
+  "pystac==1.15.1"
 ]
 
 [tool.hatch.metadata]
