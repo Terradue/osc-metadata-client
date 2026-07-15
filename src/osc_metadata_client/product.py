@@ -50,9 +50,7 @@ def execute(
     output: Path,
     oauth2_bearer: str | None,
 ) -> Path:
-    api_client: ApiClient = create_client(
-        ogc_api_processes_endpoint, oauth2_bearer
-    )
+    api_client: ApiClient = create_client(ogc_api_processes_endpoint, oauth2_bearer)
 
     status_info: StatusInfo = retrieve_status_info(
         api_client=api_client, job_id=record_geojson.id
