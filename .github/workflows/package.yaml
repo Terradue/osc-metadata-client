@@ -15,6 +15,7 @@
 name: package
 
 on:
+  workflow_dispatch:
   push:
     branches:
     - feature
@@ -34,9 +35,53 @@ permissions:
   contents: read
 
 jobs:
-  ci:
-    if: github.event_name == 'pull_request' || startsWith(github.ref, 'refs/heads/')
+  discover:
+    name: Discover Python modules
     runs-on: ubuntu-latest
+    outputs:
+      modules: ${{ steps.modules.outputs.modules }}
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Find modules
+      id: modules
+      shell: bash
+      run: |
+        modules="$({
+          find command-line-tools \
+            -mindepth 2 \
+            -maxdepth 2 \
+            -type f \
+            -name pyproject.toml \
+            -printf '%h\n' |
+            sort -u
+        } | jq -R -s -c '
+          split("\n")
+          | map(select(length > 0) | {
+              name: (split("/") | last),
+              path: .
+            })
+        ' )"
+
+        if [ "${modules}" = '[]' ]; then
+          echo 'No Python modules found under command-line-tools.' >&2
+          exit 1
+        fi
+
+        echo "Discovered modules: ${modules}"
+        echo "modules=${modules}" >> "${GITHUB_OUTPUT}"
+
+  ci:
+    name: Check and build ${{ matrix.module.name }}
+    needs: discover
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        module: ${{ fromJSON(needs.discover.outputs.modules) }}
+    defaults:
+      run:
+        working-directory: ${{ matrix.module.path }}
     steps:
     - uses: actions/checkout@v4
 
@@ -45,53 +90,71 @@ jobs:
       with:
         python-version: '3.12'
         cache: pip
+        cache-dependency-path: ${{ matrix.module.path }}/pyproject.toml
 
     - name: Install tooling
-      run: pip install hatch ruff
+      run: python -m pip install hatch ruff twine
 
-    - name: Ruff Check
+    - name: Check linting
       run: ruff check .
 
-    - name: Ruff Lint
+    - name: Check formatting
       run: ruff format --check .
 
     - name: Run tests
-      run: hatch run test:test-q
-
-  publish:
-    if: startsWith(github.ref, 'refs/tags/v')
-    runs-on: ubuntu-latest
-    environment: release
-    permissions:
-      id-token: write
-      contents: read
-    steps:
-    - uses: actions/checkout@v4
-
-    - name: Set up Python
-      uses: actions/setup-python@v5
-      with:
-        python-version: '3.12'
-        cache: pip
-
-    - name: Install Hatch
-      run: pip install hatch
-
-    - name: Verify tag matches project version
-      run: |
-        TAG_VERSION="${GITHUB_REF_NAME#v}"
-        PROJECT_VERSION="$(hatch version)"
-
-        echo "Tag version: ${TAG_VERSION}"
-        echo "Project version: ${PROJECT_VERSION}"
-
-        if [ "${TAG_VERSION}" != "${PROJECT_VERSION}" ]; then
-          echo "Tag ${GITHUB_REF_NAME} does not match project version ${PROJECT_VERSION}"
-          exit 1
-        fi
+      run: hatch run +py=3.12 test:test-q
 
     - name: Build package
       run: hatch build
 
+    - name: Check package distributions
+      run: twine check dist/*
+
+    - name: Verify tag matches project version
+      if: startsWith(github.ref, 'refs/tags/v')
+      run: |
+        tag_version="${GITHUB_REF_NAME#v}"
+        project_version="$(hatch version)"
+
+        echo "Tag version: ${tag_version}"
+        echo "Project version: ${project_version}"
+
+        if [ "${tag_version}" != "${project_version}" ]; then
+          echo "Tag ${GITHUB_REF_NAME} does not match ${project_version} for ${{ matrix.module.name }}" >&2
+          exit 1
+        fi
+
+    - name: Store package distributions
+      if: startsWith(github.ref, 'refs/tags/v')
+      uses: actions/upload-artifact@v4
+      with:
+        name: python-package-${{ matrix.module.name }}
+        path: ${{ matrix.module.path }}/dist/*
+        if-no-files-found: error
+
+  publish:
+    if: startsWith(github.ref, 'refs/tags/v')
+    name: Publish ${{ matrix.module.name }} to PyPI
+    needs:
+    - discover
+    - ci
+    runs-on: ubuntu-latest
+    environment: release
+    strategy:
+      fail-fast: false
+      matrix:
+        module: ${{ fromJSON(needs.discover.outputs.modules) }}
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+    - name: Download package distributions
+      uses: actions/download-artifact@v4
+      with:
+        name: python-package-${{ matrix.module.name }}
+        path: dist
+
     - name: Publish package distributions to PyPI
       uses: pypa/gh-action-pypi-publish@release/v1
+      with:
+        packages-dir: dist/
