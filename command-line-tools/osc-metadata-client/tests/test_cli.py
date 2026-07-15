@@ -94,7 +94,9 @@ def test_main_loads_context(monkeypatch, tmp_path, osc_modules) -> None:
         "secret",
     )
     assert called["source"] == "https://example.com/workflow.cwl"
-    assert called["ogc_api_processes_endpoint"] == "https://ogcapi.example.com/processes"
+    assert (
+        called["ogc_api_processes_endpoint"] == "https://ogcapi.example.com/processes"
+    )
     assert called["geobrowser_endpoint"] == "https://geobrowser.example.com/processes"
     assert called["record_geojson"].id == "workflow-1"
     assert called["project_id"] == "project-1"
@@ -141,7 +143,9 @@ def test_experiment_command_dispatches(monkeypatch, tmp_path, osc_modules) -> No
     assert result.exit_code == 0
     assert called["project_id"] == "project-1"
     assert called["workflow_id"] == "workflow-1"
-    assert called["ogc_api_processes_endpoint"] == "https://ogcapi.example.com/processes"
+    assert (
+        called["ogc_api_processes_endpoint"] == "https://ogcapi.example.com/processes"
+    )
     assert called["geobrowser_endpoint"] == "https://geobrowser.example.com/processes"
     assert called["record_geojson"].id == "experiment-1"
     assert called["output"] == Path(tmp_path)
@@ -194,7 +198,9 @@ def test_products_command_dispatches(monkeypatch, tmp_path, osc_modules) -> None
     )
 
     assert result.exit_code == 0
-    assert called["ogc_api_processes_endpoint"] == "https://ogcapi.example.com/processes"
+    assert (
+        called["ogc_api_processes_endpoint"] == "https://ogcapi.example.com/processes"
+    )
     assert called["geobrowser_endpoint"] == "https://geobrowser.example.com/processes"
     assert called["record_geojson"].id == "product-1"
     assert called["project_id"] == "project-1"
