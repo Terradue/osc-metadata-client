@@ -332,10 +332,13 @@ def test_product_execute_builds_collection_and_serializes(
     ]
     dumped = {}
     serialized = {}
+    client_args = {}
 
-    monkeypatch.setattr(
-        product, "create_client", lambda endpoint, token: ("client", endpoint, token)
-    )
+    def fake_create_client(endpoint, token):
+        client_args.update(endpoint=endpoint, token=token)
+        return "client"
+
+    monkeypatch.setattr(product, "create_client", fake_create_client)
     monkeypatch.setattr(
         product,
         "retrieve_status_info",
@@ -383,7 +386,7 @@ def test_product_execute_builds_collection_and_serializes(
         project_id="project-1",
         experiment_id="experiment-1",
         output=tmp_path,
-        authorization_token="token",
+        oauth2_bearer="token",
     )
 
     collection = pystac.Collection.from_dict(dumped["data"])
@@ -392,6 +395,10 @@ def test_product_execute_builds_collection_and_serializes(
 
     assert serialized["data"] == {"output": "value"}
     assert serialized["path"] == Path(tmp_path, "products/product-1/output.yaml")
+    assert client_args == {
+        "endpoint": "https://ogcapi.example.com/processes",
+        "token": "token",
+    }
     assert collection.id == "product-1"
     assert osc_ext.project == "project-1"
     assert osc_ext.experiment == "experiment-1"
