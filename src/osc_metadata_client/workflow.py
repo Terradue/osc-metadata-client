@@ -13,8 +13,8 @@
 # limitations under the License.
 
 from loguru import logger
-from osc_metadata_client import cast_model, dump_data
-from osc_metadata_client.models import OscStatus, WorkflowProperties
+from src.osc_metadata_client import cast_model, dump_data
+from src.osc_metadata_client.models import OscStatus, WorkflowProperties
 from pathlib import Path
 from transpiler_mate.ogcapi.records.ogcapi_records_models import Link, RecordGeoJSON
 
@@ -22,10 +22,11 @@ from transpiler_mate.ogcapi.records.ogcapi_records_models import Link, RecordGeo
 def execute(
     source: str,
     ogc_api_processes_endpoint: str,
+    geobrowser_endpoint: str,
     record_geojson: RecordGeoJSON,
     project_id: str,
     output: Path,
-):
+) -> Path:
     logger.debug("Enriching OGCP API Records...")
 
     record_geojson.links.append(  # type: ignore see osc_metadata_client.load_record_geojson
@@ -72,6 +73,17 @@ def execute(
             updated=None,
         )
     )
+    record_geojson.links.append(  # type: ignore see osc_metadata_client.load_record_geojson
+        Link(
+            href=f"{geobrowser_endpoint}/processes/{record_geojson.id}",
+            hreflang="en-US",
+            rel="alternate",
+            type="text/html",
+            title=f"GEP Geobrowser - Process: {record_geojson.id}",
+            created=None,
+            updated=None,
+        )
+    )
 
     record_geojson.properties.type = "workflow"
     workflow_properties: WorkflowProperties = cast_model(
@@ -84,9 +96,12 @@ def execute(
 
     logger.success("OGCP API Records enriched")
 
+    target_file = Path(output, f"workflows/{record_geojson.id}/record.json")
     dump_data(
         record_geojson.model_dump(
             by_alias=True, exclude_none=True, serialize_as_any=True
         ),
-        Path(output, f"workflows/{record_geojson.id}/record.json"),
+        target_file,
     )
+
+    return target_file

@@ -13,7 +13,7 @@
 # limitations under the License.
 
 from loguru import logger
-from osc_metadata_client import (
+from src.osc_metadata_client import (
     cast_model,
     create_client,
     retrieve_status_info,
@@ -21,7 +21,7 @@ from osc_metadata_client import (
     serialize_yaml,
 )
 from ogc_api_processes_client.models.status_info import StatusInfo
-from osc_metadata_client.models import ExperimentProperties
+from src.osc_metadata_client.models import ExperimentProperties
 from pathlib import Path
 from transpiler_mate.ogcapi.records.ogcapi_records_models import Link, RecordGeoJSON
 
@@ -31,9 +31,10 @@ def execute(
     workflow_id: str,
     record_geojson: RecordGeoJSON,
     ogc_api_processes_endpoint: str,
+    geobrowser_endpoint: str,
     output: Path,
-    authorization_token: str,
-):
+    oauth2_bearer: str,
+) -> Path:
     logger.debug("Enriching OGCP API Records...")
 
     record_geojson.links.append(  # type: ignore see osc_metadata_client.load_record_geojson
@@ -58,11 +59,22 @@ def execute(
             updated=None,
         )
     )
+    record_geojson.links.append(  # type: ignore see osc_metadata_client.load_record_geojson
+        Link(
+            href=f"{geobrowser_endpoint}/jobs/{record_geojson.id}",
+            hreflang="en-US",
+            rel="alternate",
+            type="text/html",
+            title=f"GEP Geobrowser - Job: {record_geojson.id}",
+            created=None,
+            updated=None,
+        )
+    )
 
     logger.debug("Reassembling OGC API Records 'Experiment' inputs...")
 
     status_info: StatusInfo = retrieve_status_info(
-        create_client(ogc_api_processes_endpoint, authorization_token),
+        create_client(ogc_api_processes_endpoint, oauth2_bearer),
         record_geojson.id,
     )
 
@@ -134,3 +146,5 @@ def execute(
         ),
         target_file,
     )
+
+    return target_file

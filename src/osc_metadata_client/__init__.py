@@ -24,10 +24,7 @@ from pathlib import Path
 from pydantic import BaseModel
 from pystac import Catalog, Link as PystacLink, RelType
 from requests import Session
-from requests.adapters import BaseAdapter, HTTPAdapter
-from session_adapters.file_adapter import FileAdapter
 from session_adapters.http_conts import DEFAULT_ENCODING
-from session_adapters.oci_adapter import OCIAdapter
 from tempfile import NamedTemporaryFile
 from typing import Any, Mapping, TypeVar
 from transpiler_mate.metadata import MetadataManager
@@ -80,23 +77,11 @@ def retrieve_status_info(api_client: ApiClient, job_id: str) -> StatusInfo:
 
 
 def load_record_geojson(
-    source: str, project_id: str, project_name: str
+    source: str,
+    project_id: str,
+    project_name: str,
+    session: Session = Session(),
 ) -> RecordGeoJSON:
-    session: Session = Session()
-
-    def mount_session(scheme: str, adapter: BaseAdapter):
-        logger.debug(f"Mounting '{scheme}' scheme to '{type(adapter).__name__}'...")
-        session.mount(scheme, adapter)
-        logger.debug(
-            f"Scheme '{scheme}' successfully mount to '{type(adapter).__name__}'"
-        )
-
-    http_adapter = HTTPAdapter()
-    mount_session("http://", http_adapter)
-    mount_session("https://", http_adapter)
-    mount_session("file://", FileAdapter())
-    mount_session("oci://", OCIAdapter())
-
     logger.debug(f"> GET {source}...")
 
     response = session.get(source, stream=True)

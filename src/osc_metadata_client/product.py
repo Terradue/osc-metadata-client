@@ -17,14 +17,18 @@ from loguru import logger
 from ogc_api_processes_client.api_client import ApiClient
 from ogc_api_processes_client.api.result_api import ResultApi
 from ogc_api_processes_client.models.status_info import StatusInfo
-from osc_metadata_client import (
+from src.osc_metadata_client import (
     create_client,
     retrieve_status_info,
     dump_data,
     serialize_yaml,
 )
-from osc_metadata_client.osc_extension import OscExtension, OscStatus, OscType
-from osc_metadata_client.themes_extension import ThemeConcept, Theme, ThemesExtension
+from src.osc_metadata_client.osc_extension import OscExtension, OscStatus, OscType
+from src.osc_metadata_client.themes_extension import (
+    ThemeConcept,
+    Theme,
+    ThemesExtension,
+)
 from pathlib import Path
 from pystac import (
     Collection,
@@ -39,15 +43,14 @@ from transpiler_mate.ogcapi.records.ogcapi_records_models import RecordGeoJSON
 
 def execute(
     ogc_api_processes_endpoint: str,
+    geobrowser_endpoint: str,
     record_geojson: RecordGeoJSON,
     project_id: str,
     experiment_id: str,
     output: Path,
-    authorization_token: str | None,
-):
-    api_client: ApiClient = create_client(
-        ogc_api_processes_endpoint, authorization_token
-    )
+    oauth2_bearer: str | None,
+) -> Path:
+    api_client: ApiClient = create_client(ogc_api_processes_endpoint, oauth2_bearer)
 
     status_info: StatusInfo = retrieve_status_info(
         api_client=api_client, job_id=record_geojson.id
@@ -109,6 +112,12 @@ def execute(
                 media_type="application/json",
                 title=f"OGC API Processes - Job Results: {record_geojson.id}",
             ),
+            Link(
+                rel="alternate",
+                target=f"{geobrowser_endpoint}/jobs/{record_geojson.id}/results",
+                media_type="text/html",
+                title=f"GEP Geobrowser - Job Results: {record_geojson.id}",
+            ),
         ]
     )
 
@@ -149,3 +158,5 @@ def execute(
     logger.success("STAC Collection enriched")
 
     dump_data(collection.to_dict(), target_file, RelType.CHILD)
+
+    return target_file

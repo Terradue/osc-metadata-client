@@ -47,9 +47,9 @@ def make_record(record_id: str, title: str = "Record") -> RecordGeoJSON:
 def test_create_client_sets_bearer_header(osc_modules) -> None:
     package = osc_modules["package"]
 
-    client = package.create_client("https://example.com", "secret-token")
+    client = package.create_client("https://ogcapi.example.com", "secret-token")
 
-    assert client.configuration.host == "https://example.com"
+    assert client.configuration.host == "https://ogcapi.example.com"
     assert client.header_name == "Authorization"
     assert client.header_value == "Bearer secret-token"
 
@@ -176,12 +176,10 @@ def test_load_record_geojson_enriches_transpiled_record(
 
     class FakeSession:
         def __init__(self):
-            self.mounted = {}
-
-        def mount(self, scheme, adapter):
-            self.mounted[scheme] = adapter
+            self.requested_source = None
 
         def get(self, source, stream=True):
+            self.requested_source = source
             return FakeResponse(gzip.compress(b"class: Command\n"))
 
     record = RecordGeoJSON(
@@ -203,15 +201,16 @@ def test_load_record_geojson_enriches_transpiled_record(
         def transpile(self, metadata):
             return record.model_dump(by_alias=True, exclude_none=True)
 
-    monkeypatch.setattr(package, "Session", FakeSession)
     monkeypatch.setattr(package, "MetadataManager", FakeMetadataManager)
     monkeypatch.setattr(package, "OgcRecordsTranspiler", FakeTranspiler)
-    monkeypatch.setattr(package, "OCIAdapter", lambda: object())
+
+    session = FakeSession()
 
     loaded = package.load_record_geojson(
-        "https://example.com/workflow.cwl", "proj", "Project"
+        "https://ogcapi.example.com/workflow.cwl", "proj", "Project", session
     )
 
+    assert session.requested_source == "https://ogcapi.example.com/workflow.cwl"
     assert loaded.geometry.type == "MultiPoint"
     assert loaded.properties.language.alternate == "English"
     assert loaded.properties.languages[0].alternate == "English"
@@ -232,8 +231,9 @@ def test_workflow_execute_enriches_and_serializes(
     )
 
     workflow.execute(
-        "https://example.com/workflow.cwl",
-        "https://example.com/processes",
+        "https://ogcapi.example.com/workflow.cwl",
+        "https://ogcapi.example.com/processes",
+        "https://geobrowser.example.com/processes",
         record,
         "project-1",
         tmp_path,
@@ -243,6 +243,11 @@ def test_workflow_execute_enriches_and_serializes(
     assert record.properties.osc_status == workflow.OscStatus.COMPLETED
     assert any(link.rel == "application" for link in record.links)
     assert any(link.rel == "via" for link in record.links)
+    assert any(
+        link.rel == "alternate"
+        and link.href == "https://geobrowser.example.com/processes/processes/workflow-1"
+        for link in record.links
+    )
     assert dumped["path"] == Path(tmp_path, "workflows/workflow-1/record.json")
     assert dumped["data"]["properties"]["osc:project"] == "project-1"
 
@@ -287,9 +292,10 @@ def test_experiment_execute_enriches_and_serializes(
         project_id="project-1",
         workflow_id="workflow-1",
         record_geojson=record,
-        ogc_api_processes_endpoint="https://example.com/processes",
+        ogc_api_processes_endpoint="https://ogcapi.example.com/processes",
+        geobrowser_endpoint="https://geobrowser.example.com/processes",
         output=tmp_path,
-        authorization_token="token",
+        oauth2_bearer="token",
     )
 
     assert serialized["data"] == {"region": "europe"}
@@ -300,6 +306,11 @@ def test_experiment_execute_enriches_and_serializes(
     assert record.properties.osc_prov_started_at_time == started
     assert record.properties.osc_prov_ended_at_time == finished
     assert any(link.rel == "environment" for link in record.links)
+    assert any(
+        link.rel == "alternate"
+        and link.href == "https://geobrowser.example.com/processes/jobs/experiment-1"
+        for link in record.links
+    )
     assert dumped["path"] == Path(tmp_path, "experiments/experiment-1/record.json")
 
 
@@ -314,17 +325,20 @@ def test_product_execute_builds_collection_and_serializes(
     record.links = [
         Link(
             rel="about",
-            href="https://example.com/about",
+            href="https://ogcapi.example.com/about",
             type="text/html",
             title="About",
         )
     ]
     dumped = {}
     serialized = {}
+    client_args = {}
 
-    monkeypatch.setattr(
-        product, "create_client", lambda endpoint, token: ("client", endpoint, token)
-    )
+    def fake_create_client(endpoint, token):
+        client_args.update(endpoint=endpoint, token=token)
+        return "client"
+
+    monkeypatch.setattr(product, "create_client", fake_create_client)
     monkeypatch.setattr(
         product,
         "retrieve_status_info",
@@ -366,12 +380,13 @@ def test_product_execute_builds_collection_and_serializes(
     monkeypatch.setattr(product, "datetime", FakeDatetime)
 
     product.execute(
-        ogc_api_processes_endpoint="https://example.com/processes",
+        ogc_api_processes_endpoint="https://ogcapi.example.com/processes",
+        geobrowser_endpoint="https://geobrowser.example.com/processes",
         record_geojson=record,
         project_id="project-1",
         experiment_id="experiment-1",
         output=tmp_path,
-        authorization_token="token",
+        oauth2_bearer="token",
     )
 
     collection = pystac.Collection.from_dict(dumped["data"])
@@ -380,6 +395,10 @@ def test_product_execute_builds_collection_and_serializes(
 
     assert serialized["data"] == {"output": "value"}
     assert serialized["path"] == Path(tmp_path, "products/product-1/output.yaml")
+    assert client_args == {
+        "endpoint": "https://ogcapi.example.com/processes",
+        "token": "token",
+    }
     assert collection.id == "product-1"
     assert osc_ext.project == "project-1"
     assert osc_ext.experiment == "experiment-1"
@@ -387,4 +406,10 @@ def test_product_execute_builds_collection_and_serializes(
     assert themes_ext.themes is not None
     assert themes_ext.themes[0].concepts[0].id == "land"
     assert any(link.rel == "output" for link in collection.links)
+    assert any(
+        link.rel == "alternate"
+        and link.target
+        == "https://geobrowser.example.com/processes/jobs/product-1/results"
+        for link in collection.links
+    )
     assert dumped["path"] == Path(tmp_path, "products/product-1/collection.json")

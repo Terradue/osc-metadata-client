@@ -1,71 +1,81 @@
 # CLI Reference
 
-`osc-client` is a command-line interface for generating Open Science Catalog
-metadata from [CWL](https://www.commonwl.org/) workflows and their executions on
-[OGC API - Processes](https://docs.ogc.org/is/18-062r2/18-062r2.html) services.
+`osc-metadata-client` generates Open Science Catalog metadata from
+[CWL](https://www.commonwl.org/) workflows and executions exposed through
+[OGC API - Processes](https://docs.ogc.org/is/18-062r2/18-062r2.html).
 
-The CLI is organized around a shared command entry point and three subcommands:
+The CLI provides three subcommands:
 
 - `workflow`
 - `experiment`
 - `products`
 
-## Base Command
+## Base command
 
-All commands are invoked through the main CLI entry point:
-
-```bash
-osc-client [OPTIONS] SOURCE COMMAND [ARGS]...
+```text
+osc-metadata-client [OPTIONS] SOURCE COMMAND [ARGS]...
 ```
 
-`SOURCE` is the input CWL workflow description that is used to bootstrap the
-metadata generation flow.
+`SOURCE` identifies the CWL document used to bootstrap the metadata record. The
+configured request session supports HTTP(S), `file://`, and OCI sources.
 
-### Shared Options
+All shared options must appear before `SOURCE`. Subcommand-specific options appear
+after the subcommand name.
 
-The following options are required for all commands:
+## Shared options
 
-- `--id`
-  The OGC API Processes job identifier to assign to the generated metadata record.
-- `--project-id`
-  The identifier of the referencing Open Science Catalog project.
-- `--project-name`
-  The human-readable name of the referencing Open Science Catalog project.
-- `--output`
-  The output directory where generated metadata files are written.
+The following options are required for every subcommand:
 
-### Example
+| Option | Description |
+| --- | --- |
+| `--id TEXT` | Identifier assigned to the generated workflow, experiment, or product record. |
+| `--project-id TEXT` | Referencing Open Science Catalog project identifier. |
+| `--project-name TEXT` | Human-readable project name. |
+| `--ogc-api-processes-endpoint TEXT` | Base URL used to construct OGC API - Processes links and retrieve job information. |
+| `--geobrowser-endpoint TEXT` | Base URL used to construct human-readable Geobrowser links. |
+| `--output PATH` | Root directory for generated metadata. |
+
+The following shared authentication options are optional:
+
+| Option | Environment variable | Description |
+| --- | --- | --- |
+| `--oauth2-bearer TEXT` | `OAUTH2_BEARER` | Bearer token used for HTTP(S) source retrieval and authenticated OGC API - Processes requests. |
+| `--oci-hostname TEXT` | `OCI_HOSTNAME` | OCI registry hostname. |
+| `--oci-username TEXT` | `OCI_USERNAME` | OCI registry username. |
+| `--oci-password TEXT` | `OCI_PASSWORD` | OCI registry password. |
+
+When `--oauth2-bearer` is omitted, the client uses the standard unauthenticated
+HTTP adapter. Authentication is configured once on the base command; the
+`experiment` and `products` subcommands do not accept a separate authorization
+option.
+
+## `workflow`
+
+The `workflow` command transpiles metadata from the CWL source and enriches it as
+an Open Science Catalog workflow record.
+
+### Syntax
 
 ```bash
-osc-client \
-  --id job-001 \
+osc-metadata-client \
+  --id workflow-001 \
   --project-id my-project \
   --project-name "My Project" \
+  --ogc-api-processes-endpoint https://processes.example.org \
+  --geobrowser-endpoint https://browser.example.org \
   --output ./build/catalog \
   https://example.org/workflows/process.cwl \
   workflow
 ```
 
-## `workflow`
+The generated record includes links to the source CWL application, its OGC API -
+Processes process page, and its Geobrowser process page.
 
-The `workflow` command creates metadata for a workflow resource starting from the
-provided CWL document.
+### Output
 
-It enriches the workflow metadata and writes the generated record under the
-workflow output structure.
-
-### Syntax
-
-```bash
-osc-client [SHARED OPTIONS] SOURCE workflow
+```text
+OUTPUT/workflows/ID/record.json
 ```
-
-### Behavior
-
-- loads and transpiles metadata from the CWL source
-- assigns the provided `--id` to the generated record
-- enriches the record as an Open Science Catalog workflow
-- writes the resulting metadata under the selected output directory
 
 ### Diagrams
 
@@ -75,38 +85,38 @@ osc-client [SHARED OPTIONS] SOURCE workflow
 
 ## `experiment`
 
-The `experiment` command creates metadata for an experiment derived from a workflow
-execution on an OGC API - Processes instance.
-
-In addition to the shared options, it requires workflow and process service
-references so the execution metadata can be collected and serialized.
+The `experiment` command retrieves job status and input information, links the
+execution to its workflow, and enriches the metadata with provenance fields.
 
 ### Syntax
 
 ```bash
-osc-client [SHARED OPTIONS] SOURCE experiment \
-  --workflow-id WORKFLOW_ID \
-  --ogc-api-processes-endpoint URL \
-  [--authorization-token TOKEN]
+osc-metadata-client \
+  --id job-001 \
+  --project-id my-project \
+  --project-name "My Project" \
+  --ogc-api-processes-endpoint https://processes.example.org \
+  --geobrowser-endpoint https://browser.example.org \
+  --output ./build/catalog \
+  --oauth2-bearer "$OAUTH2_BEARER" \
+  https://example.org/workflows/process.cwl \
+  experiment \
+  --workflow-id workflow-001
 ```
 
-### Command Options
+`--workflow-id` is required and identifies the workflow record related to the
+experiment.
 
-- `--workflow-id`
-  The referencing OGC API Records workflow URL.
-- `--ogc-api-processes-endpoint`
-  The OGC API - Processes service URL used to retrieve execution status and inputs.
-- `--authorization-token`
-  Optional bearer token used to authenticate against the OGC API - Processes
-  service.
+The command polls the job until it reaches a terminal state. A successful job
+produces the experiment record and its serialized inputs; an unsuccessful status
+causes the command to fail.
 
-### Behavior
+### Output
 
-- retrieves execution details for the provided job identifier
-- serializes experiment input parameters
-- links the experiment back to the originating workflow
-- enriches the record with experiment and provenance metadata
-- writes the resulting record under the experiment output structure
+```text
+OUTPUT/experiments/ID/record.json
+OUTPUT/experiments/ID/input.yaml
+```
 
 ### Diagrams
 
@@ -116,38 +126,37 @@ osc-client [SHARED OPTIONS] SOURCE experiment \
 
 ## `products`
 
-The `products` command creates product metadata from the outputs of an executed
-workflow.
-
-It generates a STAC collection representing the produced data and enriches it with
-Open Science Catalog and themes extension metadata.
+The `products` command retrieves a successful job result and creates a STAC
+Collection enriched with the Open Science Catalog and themes extensions.
 
 ### Syntax
 
 ```bash
-osc-client [SHARED OPTIONS] SOURCE products \
-  --experiment-id EXPERIMENT_ID \
-  --ogc-api-processes-endpoint URL \
-  [--authorization-token TOKEN]
+osc-metadata-client \
+  --id job-001 \
+  --project-id my-project \
+  --project-name "My Project" \
+  --ogc-api-processes-endpoint https://processes.example.org \
+  --geobrowser-endpoint https://browser.example.org \
+  --output ./build/catalog \
+  --oauth2-bearer "$OAUTH2_BEARER" \
+  https://example.org/workflows/process.cwl \
+  products \
+  --experiment-id experiment-001
 ```
 
-### Command Options
+`--experiment-id` is required and identifies the experiment related to the
+generated product collection.
 
-- `--experiment-id`
-  The referencing OGC API Records workflow ID.
-- `--ogc-api-processes-endpoint`
-  The OGC API - Processes service URL used to access execution outputs.
-- `--authorization-token`
-  Optional bearer token used to authenticate against the OGC API - Processes
-  service.
+The collection includes links to the OGC API - Processes result, the Geobrowser
+result page, the experiment, and the serialized output parameters.
 
-### Behavior
+### Output
 
-- retrieves execution output metadata from the OGC API - Processes service
-- serializes the raw output payload
-- generates a STAC collection for the produced resource
-- enriches the collection with OSC and themes extensions
-- writes the resulting collection under the product output structure
+```text
+OUTPUT/products/ID/collection.json
+OUTPUT/products/ID/output.yaml
+```
 
 ### Diagrams
 
