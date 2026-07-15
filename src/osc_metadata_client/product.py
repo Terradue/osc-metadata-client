@@ -48,10 +48,10 @@ def execute(
     project_id: str,
     experiment_id: str,
     output: Path,
-    authorization_token: str | None,
+    oauth2_bearer: str | None,
 ) -> Path:
     api_client: ApiClient = create_client(
-        ogc_api_processes_endpoint, authorization_token
+        ogc_api_processes_endpoint, oauth2_bearer
     )
 
     status_info: StatusInfo = retrieve_status_info(
