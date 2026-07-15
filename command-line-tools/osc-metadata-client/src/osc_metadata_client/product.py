@@ -39,6 +39,7 @@ from transpiler_mate.ogcapi.records.ogcapi_records_models import RecordGeoJSON
 
 def execute(
     ogc_api_processes_endpoint: str,
+    geobrowser_endpoint: str,
     record_geojson: RecordGeoJSON,
     project_id: str,
     experiment_id: str,
@@ -108,6 +109,12 @@ def execute(
                 target=f"{ogc_api_processes_endpoint}/jobs/{record_geojson.id}/results",
                 media_type="application/json",
                 title=f"OGC API Processes - Job Results: {record_geojson.id}",
+            ),
+            Link(
+                rel="alternate",
+                target=f"{geobrowser_endpoint}/jobs/{record_geojson.id}/results",
+                media_type="text/html",
+                title=f"GEP Geobrowser - Job Results: {record_geojson.id}",
             ),
         ]
     )

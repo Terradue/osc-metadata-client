@@ -22,6 +22,7 @@ from transpiler_mate.ogcapi.records.ogcapi_records_models import Link, RecordGeo
 def execute(
     source: str,
     ogc_api_processes_endpoint: str,
+    geobrowser_endpoint: str,
     record_geojson: RecordGeoJSON,
     project_id: str,
     output: Path,
@@ -68,6 +69,17 @@ def execute(
             rel="via",
             type="application/json",
             title=f"OGC API Processes - Process: {record_geojson.id}",
+            created=None,
+            updated=None,
+        )
+    )
+    record_geojson.links.append(  # type: ignore see osc_metadata_client.load_record_geojson
+        Link(
+            href=f"{geobrowser_endpoint}/processes/{record_geojson.id}",
+            hreflang="en-US",
+            rel="alternate",
+            type="text/html",
+            title=f"GEP Geobrowser - Process: {record_geojson.id}",
             created=None,
             updated=None,
         )

@@ -47,6 +47,12 @@ import click
     help="The referencing OGC API Processes service URL.",
 )
 @click.option(
+    "--geobrowser-endpoint",
+    type=click.STRING,
+    required=True,
+    help="The referencing Geobrowser service URL.",
+)
+@click.option(
     "--output",
     type=click.Path(path_type=Path),
     required=True,
@@ -63,6 +69,7 @@ def main(
     project_id: str,
     project_name: str,
     ogc_api_processes_endpoint: str,
+    geobrowser_endpoint: str,
     output: Path,
     oci_hostname: str | None,
     oci_username: str | None,
@@ -78,6 +85,7 @@ def main(
     ctx.obj["record_geojson"] = record_geojson
 
     ctx.obj["ogc-api-processes-endpoint"] = ogc_api_processes_endpoint
+    ctx.obj["geobrowser_endpoint"] = geobrowser_endpoint
     ctx.obj["project-id"] = project_id
     ctx.obj["output"] = output
 
@@ -87,11 +95,17 @@ def main(
 def workflow(ctx):
     source: str = ctx.obj["source"]
     ogc_api_processes_endpoint = ctx.obj["ogc-api-processes-endpoint"]
+    geobrowser_endpoint = ctx.obj["geobrowser_endpoint"]
     record_geojson: RecordGeoJSON = ctx.obj["record_geojson"]
     project_id: str = ctx.obj["project-id"]
     output: Path = ctx.obj["output"]
     execute_workflow(
-        source, ogc_api_processes_endpoint, record_geojson, project_id, output
+        source,
+        ogc_api_processes_endpoint,
+        geobrowser_endpoint,
+        record_geojson,
+        project_id,
+        output,
     )
 
 
@@ -116,6 +130,7 @@ def experiment(
     authorization_token: str,
 ):
     ogc_api_processes_endpoint = ctx.obj["ogc-api-processes-endpoint"]
+    geobrowser_endpoint = ctx.obj["geobrowser_endpoint"]
     record_geojson: RecordGeoJSON = ctx.obj["record_geojson"]
     project_id: str = ctx.obj["project-id"]
     output: Path = ctx.obj["output"]
@@ -124,6 +139,7 @@ def experiment(
         workflow_id=workflow_id,
         record_geojson=record_geojson,
         ogc_api_processes_endpoint=ogc_api_processes_endpoint,
+        geobrowser_endpoint=geobrowser_endpoint,
         output=output,
         authorization_token=authorization_token,
     )
@@ -150,11 +166,13 @@ def products(
     authorization_token: str,
 ):
     ogc_api_processes_endpoint = ctx.obj["ogc-api-processes-endpoint"]
+    geobrowser_endpoint = ctx.obj["geobrowser_endpoint"]
     record_geojson: RecordGeoJSON = ctx.obj["record_geojson"]
     project_id: str = ctx.obj["project-id"]
     output: Path = ctx.obj["output"]
     execute_product(
         ogc_api_processes_endpoint,
+        geobrowser_endpoint,
         record_geojson,
         project_id,
         experiment_id,

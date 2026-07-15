@@ -47,9 +47,9 @@ def make_record(record_id: str, title: str = "Record") -> RecordGeoJSON:
 def test_create_client_sets_bearer_header(osc_modules) -> None:
     package = osc_modules["package"]
 
-    client = package.create_client("https://example.com", "secret-token")
+    client = package.create_client("https://ogcapi.example.com", "secret-token")
 
-    assert client.configuration.host == "https://example.com"
+    assert client.configuration.host == "https://ogcapi.example.com"
     assert client.header_name == "Authorization"
     assert client.header_value == "Bearer secret-token"
 
@@ -209,7 +209,7 @@ def test_load_record_geojson_enriches_transpiled_record(
     monkeypatch.setattr(package, "OCIAdapter", lambda **kwargs: object())
 
     loaded = package.load_record_geojson(
-        "https://example.com/workflow.cwl", "proj", "Project"
+        "https://ogcapi.example.com/workflow.cwl", "proj", "Project"
     )
 
     assert loaded.geometry.type == "MultiPoint"
@@ -232,8 +232,8 @@ def test_workflow_execute_enriches_and_serializes(
     )
 
     workflow.execute(
-        "https://example.com/workflow.cwl",
-        "https://example.com/processes",
+        "https://ogcapi.example.com/workflow.cwl",
+        "https://ogcapi.example.com/processes",
         record,
         "project-1",
         tmp_path,
@@ -287,7 +287,7 @@ def test_experiment_execute_enriches_and_serializes(
         project_id="project-1",
         workflow_id="workflow-1",
         record_geojson=record,
-        ogc_api_processes_endpoint="https://example.com/processes",
+        ogc_api_processes_endpoint="https://ogcapi.example.com/processes",
         output=tmp_path,
         authorization_token="token",
     )
@@ -314,7 +314,7 @@ def test_product_execute_builds_collection_and_serializes(
     record.links = [
         Link(
             rel="about",
-            href="https://example.com/about",
+            href="https://ogcapi.example.com/about",
             type="text/html",
             title="About",
         )
@@ -366,7 +366,7 @@ def test_product_execute_builds_collection_and_serializes(
     monkeypatch.setattr(product, "datetime", FakeDatetime)
 
     product.execute(
-        ogc_api_processes_endpoint="https://example.com/processes",
+        ogc_api_processes_endpoint="https://ogcapi.example.com/processes",
         record_geojson=record,
         project_id="project-1",
         experiment_id="experiment-1",

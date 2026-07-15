@@ -31,6 +31,7 @@ def execute(
     workflow_id: str,
     record_geojson: RecordGeoJSON,
     ogc_api_processes_endpoint: str,
+    geobrowser_endpoint: str,
     output: Path,
     authorization_token: str,
 ):
@@ -54,6 +55,17 @@ def execute(
             rel="via",
             type="application/json",
             title=f"OGC API Processes - Job: {record_geojson.id}",
+            created=None,
+            updated=None,
+        )
+    )
+    record_geojson.links.append(  # type: ignore see osc_metadata_client.load_record_geojson
+        Link(
+            href=f"{geobrowser_endpoint}/jobs/{record_geojson.id}",
+            hreflang="en-US",
+            rel="alternate",
+            type="text/html",
+            title=f"GEP Geobrowser - Job: {record_geojson.id}",
             created=None,
             updated=None,
         )

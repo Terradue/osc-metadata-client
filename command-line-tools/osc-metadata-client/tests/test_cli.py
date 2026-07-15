@@ -46,10 +46,11 @@ def test_main_loads_context(monkeypatch, tmp_path, osc_modules) -> None:
     monkeypatch.setattr(
         cli,
         "execute_workflow",
-        lambda source, ogc_api_processes_endpoint, record_geojson, project_id, output: (
+        lambda source, ogc_api_processes_endpoint, geobrowser_endpoint, record_geojson, project_id, output: (
             called.update(
                 source=source,
                 ogc_api_processes_endpoint=ogc_api_processes_endpoint,
+                geobrowser_endpoint=geobrowser_endpoint,
                 record_geojson=record_geojson,
                 project_id=project_id,
                 output=output,
@@ -67,7 +68,9 @@ def test_main_loads_context(monkeypatch, tmp_path, osc_modules) -> None:
             "--project-name",
             "Project",
             "--ogc-api-processes-endpoint",
-            "https://example.com/processes",
+            "https://ogcapi.example.com/processes",
+            "--geobrowser-endpoint",
+            "https://geobrowser.example.com/processes",
             "--output",
             str(tmp_path),
             "--oci-hostname",
@@ -91,7 +94,8 @@ def test_main_loads_context(monkeypatch, tmp_path, osc_modules) -> None:
         "secret",
     )
     assert called["source"] == "https://example.com/workflow.cwl"
-    assert called["ogc_api_processes_endpoint"] == "https://example.com/processes"
+    assert called["ogc_api_processes_endpoint"] == "https://ogcapi.example.com/processes"
+    assert called["geobrowser_endpoint"] == "https://geobrowser.example.com/processes"
     assert called["record_geojson"].id == "workflow-1"
     assert called["project_id"] == "project-1"
     assert called["output"] == Path(tmp_path)
@@ -120,7 +124,9 @@ def test_experiment_command_dispatches(monkeypatch, tmp_path, osc_modules) -> No
             "--project-name",
             "Project",
             "--ogc-api-processes-endpoint",
-            "https://example.com/processes",
+            "https://ogcapi.example.com/processes",
+            "--geobrowser-endpoint",
+            "https://geobrowser.example.com/processes",
             "--output",
             str(tmp_path),
             "https://example.com/workflow.cwl",
@@ -135,7 +141,8 @@ def test_experiment_command_dispatches(monkeypatch, tmp_path, osc_modules) -> No
     assert result.exit_code == 0
     assert called["project_id"] == "project-1"
     assert called["workflow_id"] == "workflow-1"
-    assert called["ogc_api_processes_endpoint"] == "https://example.com/processes"
+    assert called["ogc_api_processes_endpoint"] == "https://ogcapi.example.com/processes"
+    assert called["geobrowser_endpoint"] == "https://geobrowser.example.com/processes"
     assert called["record_geojson"].id == "experiment-1"
     assert called["output"] == Path(tmp_path)
     assert called["authorization_token"] == "token"
@@ -152,12 +159,13 @@ def test_products_command_dispatches(monkeypatch, tmp_path, osc_modules) -> None
         cli,
         "execute_product",
         lambda *args: called.update(
-            endpoint=args[0],
-            record_geojson=args[1],
-            project_id=args[2],
-            experiment_id=args[3],
-            output=args[4],
-            authorization_token=args[5],
+            ogc_api_processes_endpoint=args[0],
+            geobrowser_endpoint=args[1],
+            record_geojson=args[2],
+            project_id=args[3],
+            experiment_id=args[4],
+            output=args[5],
+            authorization_token=args[6],
         ),
     )
 
@@ -171,7 +179,9 @@ def test_products_command_dispatches(monkeypatch, tmp_path, osc_modules) -> None
             "--project-name",
             "Project",
             "--ogc-api-processes-endpoint",
-            "https://example.com/processes",
+            "https://ogcapi.example.com/processes",
+            "--geobrowser-endpoint",
+            "https://geobrowser.example.com/processes",
             "--output",
             str(tmp_path),
             "https://example.com/workflow.cwl",
@@ -184,7 +194,8 @@ def test_products_command_dispatches(monkeypatch, tmp_path, osc_modules) -> None
     )
 
     assert result.exit_code == 0
-    assert called["endpoint"] == "https://example.com/processes"
+    assert called["ogc_api_processes_endpoint"] == "https://ogcapi.example.com/processes"
+    assert called["geobrowser_endpoint"] == "https://geobrowser.example.com/processes"
     assert called["record_geojson"].id == "product-1"
     assert called["project_id"] == "project-1"
     assert called["experiment_id"] == "experiment-1"
