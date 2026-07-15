@@ -7,13 +7,27 @@ and this project uses SemVer-style release tags.
 
 ## [Unreleased]
 
+### Added
+
+### Changed
+
+### Deprecated
+
+### Removed
+
+### Fixed
+
+### Security
+
+## [0.4.0] - 2025-07-15
+
 ### Changed
 
 - Reorganized the project layout to match the EOAP CWL release workflow project
   structure contract.
 - Regenerated CWL workflow documentation.
 - Updated the `ogc-api-processes-client` dependency.
-- OCI credentials via CLI
+- OCI/OAuth2 credentials via CLI
 
 ### Fixed
 
@@ -104,6 +118,7 @@ and this project uses SemVer-style release tags.
   issues.
 
 [Unreleased]: https://github.com/Terradue/osc-metadata-client/compare/v0.3.0...HEAD
+[0.4.0]: https://github.com/Terradue/osc-metadata-client/compare/v0.3.0...v0.4.0
 [0.3.0]: https://github.com/Terradue/osc-metadata-client/compare/v0.2.0...v0.3.0
 [0.2.0]: https://github.com/Terradue/osc-metadata-client/compare/v0.1.0-beta...v0.2.0
 [0.1.0-beta]: https://github.com/Terradue/osc-metadata-client/compare/v0.1.0...v0.1.0-beta

@@ -176,12 +176,10 @@ def test_load_record_geojson_enriches_transpiled_record(
 
     class FakeSession:
         def __init__(self):
-            self.mounted = {}
-
-        def mount(self, scheme, adapter):
-            self.mounted[scheme] = adapter
+            self.requested_source = None
 
         def get(self, source, stream=True):
+            self.requested_source = source
             return FakeResponse(gzip.compress(b"class: Command\n"))
 
     record = RecordGeoJSON(
@@ -203,15 +201,16 @@ def test_load_record_geojson_enriches_transpiled_record(
         def transpile(self, metadata):
             return record.model_dump(by_alias=True, exclude_none=True)
 
-    monkeypatch.setattr(package, "Session", FakeSession)
     monkeypatch.setattr(package, "MetadataManager", FakeMetadataManager)
     monkeypatch.setattr(package, "OgcRecordsTranspiler", FakeTranspiler)
-    monkeypatch.setattr(package, "OCIAdapter", lambda **kwargs: object())
+
+    session = FakeSession()
 
     loaded = package.load_record_geojson(
-        "https://ogcapi.example.com/workflow.cwl", "proj", "Project"
+        "https://ogcapi.example.com/workflow.cwl", "proj", "Project", session
     )
 
+    assert session.requested_source == "https://ogcapi.example.com/workflow.cwl"
     assert loaded.geometry.type == "MultiPoint"
     assert loaded.properties.language.alternate == "English"
     assert loaded.properties.languages[0].alternate == "English"
@@ -296,7 +295,7 @@ def test_experiment_execute_enriches_and_serializes(
         ogc_api_processes_endpoint="https://ogcapi.example.com/processes",
         geobrowser_endpoint="https://geobrowser.example.com/processes",
         output=tmp_path,
-        authorization_token="token",
+        oauth2_bearer="token",
     )
 
     assert serialized["data"] == {"region": "europe"}

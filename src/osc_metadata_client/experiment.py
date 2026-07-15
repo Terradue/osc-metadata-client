@@ -33,7 +33,7 @@ def execute(
     ogc_api_processes_endpoint: str,
     geobrowser_endpoint: str,
     output: Path,
-    authorization_token: str,
+    oauth2_bearer: str,
 ) -> Path:
     logger.debug("Enriching OGCP API Records...")
 
@@ -74,7 +74,7 @@ def execute(
     logger.debug("Reassembling OGC API Records 'Experiment' inputs...")
 
     status_info: StatusInfo = retrieve_status_info(
-        create_client(ogc_api_processes_endpoint, authorization_token),
+        create_client(ogc_api_processes_endpoint, oauth2_bearer),
         record_geojson.id,
     )
 
