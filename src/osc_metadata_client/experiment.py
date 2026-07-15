@@ -34,7 +34,7 @@ def execute(
     geobrowser_endpoint: str,
     output: Path,
     authorization_token: str,
-):
+) -> Path:
     logger.debug("Enriching OGCP API Records...")
 
     record_geojson.links.append(  # type: ignore see osc_metadata_client.load_record_geojson
@@ -146,3 +146,5 @@ def execute(
         ),
         target_file,
     )
+
+    return target_file

@@ -26,7 +26,7 @@ def execute(
     record_geojson: RecordGeoJSON,
     project_id: str,
     output: Path,
-):
+) -> Path:
     logger.debug("Enriching OGCP API Records...")
 
     record_geojson.links.append(  # type: ignore see osc_metadata_client.load_record_geojson
@@ -96,9 +96,12 @@ def execute(
 
     logger.success("OGCP API Records enriched")
 
+    target_file = Path(output, f"workflows/{record_geojson.id}/record.json")
     dump_data(
         record_geojson.model_dump(
             by_alias=True, exclude_none=True, serialize_as_any=True
         ),
-        Path(output, f"workflows/{record_geojson.id}/record.json"),
+        target_file,
     )
+
+    return target_file

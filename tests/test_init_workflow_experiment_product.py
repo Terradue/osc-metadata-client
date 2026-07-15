@@ -246,8 +246,7 @@ def test_workflow_execute_enriches_and_serializes(
     assert any(link.rel == "via" for link in record.links)
     assert any(
         link.rel == "alternate"
-        and link.href
-        == "https://geobrowser.example.com/processes/processes/workflow-1"
+        and link.href == "https://geobrowser.example.com/processes/processes/workflow-1"
         for link in record.links
     )
     assert dumped["path"] == Path(tmp_path, "workflows/workflow-1/record.json")
@@ -310,8 +309,7 @@ def test_experiment_execute_enriches_and_serializes(
     assert any(link.rel == "environment" for link in record.links)
     assert any(
         link.rel == "alternate"
-        and link.href
-        == "https://geobrowser.example.com/processes/jobs/experiment-1"
+        and link.href == "https://geobrowser.example.com/processes/jobs/experiment-1"
         for link in record.links
     )
     assert dumped["path"] == Path(tmp_path, "experiments/experiment-1/record.json")

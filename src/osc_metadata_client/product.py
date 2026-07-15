@@ -24,7 +24,11 @@ from src.osc_metadata_client import (
     serialize_yaml,
 )
 from src.osc_metadata_client.osc_extension import OscExtension, OscStatus, OscType
-from src.osc_metadata_client.themes_extension import ThemeConcept, Theme, ThemesExtension
+from src.osc_metadata_client.themes_extension import (
+    ThemeConcept,
+    Theme,
+    ThemesExtension,
+)
 from pathlib import Path
 from pystac import (
     Collection,
@@ -45,7 +49,7 @@ def execute(
     experiment_id: str,
     output: Path,
     authorization_token: str | None,
-):
+) -> Path:
     api_client: ApiClient = create_client(
         ogc_api_processes_endpoint, authorization_token
     )
@@ -156,3 +160,5 @@ def execute(
     logger.success("STAC Collection enriched")
 
     dump_data(collection.to_dict(), target_file, RelType.CHILD)
+
+    return target_file
