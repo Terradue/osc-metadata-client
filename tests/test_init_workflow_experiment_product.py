@@ -234,6 +234,7 @@ def test_workflow_execute_enriches_and_serializes(
     workflow.execute(
         "https://ogcapi.example.com/workflow.cwl",
         "https://ogcapi.example.com/processes",
+        "https://geobrowser.example.com/processes",
         record,
         "project-1",
         tmp_path,
@@ -243,6 +244,12 @@ def test_workflow_execute_enriches_and_serializes(
     assert record.properties.osc_status == workflow.OscStatus.COMPLETED
     assert any(link.rel == "application" for link in record.links)
     assert any(link.rel == "via" for link in record.links)
+    assert any(
+        link.rel == "alternate"
+        and link.href
+        == "https://geobrowser.example.com/processes/processes/workflow-1"
+        for link in record.links
+    )
     assert dumped["path"] == Path(tmp_path, "workflows/workflow-1/record.json")
     assert dumped["data"]["properties"]["osc:project"] == "project-1"
 
@@ -288,6 +295,7 @@ def test_experiment_execute_enriches_and_serializes(
         workflow_id="workflow-1",
         record_geojson=record,
         ogc_api_processes_endpoint="https://ogcapi.example.com/processes",
+        geobrowser_endpoint="https://geobrowser.example.com/processes",
         output=tmp_path,
         authorization_token="token",
     )
@@ -300,6 +308,12 @@ def test_experiment_execute_enriches_and_serializes(
     assert record.properties.osc_prov_started_at_time == started
     assert record.properties.osc_prov_ended_at_time == finished
     assert any(link.rel == "environment" for link in record.links)
+    assert any(
+        link.rel == "alternate"
+        and link.href
+        == "https://geobrowser.example.com/processes/jobs/experiment-1"
+        for link in record.links
+    )
     assert dumped["path"] == Path(tmp_path, "experiments/experiment-1/record.json")
 
 
@@ -367,6 +381,7 @@ def test_product_execute_builds_collection_and_serializes(
 
     product.execute(
         ogc_api_processes_endpoint="https://ogcapi.example.com/processes",
+        geobrowser_endpoint="https://geobrowser.example.com/processes",
         record_geojson=record,
         project_id="project-1",
         experiment_id="experiment-1",
@@ -387,4 +402,10 @@ def test_product_execute_builds_collection_and_serializes(
     assert themes_ext.themes is not None
     assert themes_ext.themes[0].concepts[0].id == "land"
     assert any(link.rel == "output" for link in collection.links)
+    assert any(
+        link.rel == "alternate"
+        and link.target
+        == "https://geobrowser.example.com/processes/jobs/product-1/results"
+        for link in collection.links
+    )
     assert dumped["path"] == Path(tmp_path, "products/product-1/collection.json")

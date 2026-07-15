@@ -13,7 +13,7 @@
 # limitations under the License.
 
 from loguru import logger
-from osc_metadata_client import (
+from src.osc_metadata_client import (
     cast_model,
     create_client,
     retrieve_status_info,
@@ -21,7 +21,7 @@ from osc_metadata_client import (
     serialize_yaml,
 )
 from ogc_api_processes_client.models.status_info import StatusInfo
-from osc_metadata_client.models import ExperimentProperties
+from src.osc_metadata_client.models import ExperimentProperties
 from pathlib import Path
 from transpiler_mate.ogcapi.records.ogcapi_records_models import Link, RecordGeoJSON
 

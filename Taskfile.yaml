@@ -16,6 +16,7 @@ version: '3'
 
 includes:
   json: https://raw.githubusercontent.com/Terradue/taskfile-utils/refs/heads/main/json.yaml
+  quality: https://raw.githubusercontent.com/Terradue/taskfile-utils/refs/heads/main/quality.yaml
 
 tasks:
 

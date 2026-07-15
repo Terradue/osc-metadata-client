@@ -17,14 +17,14 @@ from loguru import logger
 from ogc_api_processes_client.api_client import ApiClient
 from ogc_api_processes_client.api.result_api import ResultApi
 from ogc_api_processes_client.models.status_info import StatusInfo
-from osc_metadata_client import (
+from src.osc_metadata_client import (
     create_client,
     retrieve_status_info,
     dump_data,
     serialize_yaml,
 )
-from osc_metadata_client.osc_extension import OscExtension, OscStatus, OscType
-from osc_metadata_client.themes_extension import ThemeConcept, Theme, ThemesExtension
+from src.osc_metadata_client.osc_extension import OscExtension, OscStatus, OscType
+from src.osc_metadata_client.themes_extension import ThemeConcept, Theme, ThemesExtension
 from pathlib import Path
 from pystac import (
     Collection,
