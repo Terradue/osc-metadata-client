@@ -130,7 +130,9 @@ def test_dump_data_writes_json_and_updates_catalog(tmp_path, osc_modules) -> Non
     assert "./abc/record.json" in hrefs
 
 
-def test_dump_data_creates_catalog_for_each_resource_type(tmp_path, osc_modules) -> None:
+def test_dump_data_creates_catalog_for_each_resource_type(
+    tmp_path, osc_modules
+) -> None:
     package = osc_modules["package"]
     expected_catalogs = {
         "workflow": ("workflows", "Geoscience workflows for experiments"),

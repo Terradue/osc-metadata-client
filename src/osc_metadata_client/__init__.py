@@ -234,15 +234,10 @@ def dump_data(data: Mapping[str, Any], output: Path, rel: RelType = RelType.ITEM
 
         properties = data.get("properties", {})
         resource_type = (
-            properties.get("osc:type")
-            or properties.get("type")
-            or data.get("osc:type")
+            properties.get("osc:type") or properties.get("type") or data.get("osc:type")
         )
 
-        if (
-            not isinstance(resource_type, str)
-            or resource_type not in CATALOG_METADATA
-        ):
+        if not isinstance(resource_type, str) or resource_type not in CATALOG_METADATA:
             raise ValueError(
                 f"Unsupported or missing OSC resource type: {resource_type!r}"
             )
