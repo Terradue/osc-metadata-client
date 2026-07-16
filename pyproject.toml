@@ -38,7 +38,7 @@ dependencies = [
 allow-direct-references = true
 
 [project.urls]
-Documentation = "https://github.com/Terradue/osc-metadata-client#readme"
+Documentation = "https://terradue.github.io/osc-metadata-client/"
 Issues = "https://github.com/Terradue/osc-metadata-client/issues"
 Source = "https://github.com/Terradue/osc-metadata-client"
 
