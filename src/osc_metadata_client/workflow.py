@@ -13,8 +13,8 @@
 # limitations under the License.
 
 from loguru import logger
-from src.osc_metadata_client import cast_model, dump_data
-from src.osc_metadata_client.models import OscStatus, WorkflowProperties
+from osc_metadata_client import cast_model, dump_data
+from osc_metadata_client.models import OscStatus, WorkflowProperties
 from pathlib import Path
 from transpiler_mate.ogcapi.records.ogcapi_records_models import Link, RecordGeoJSON
 
