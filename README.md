@@ -1,5 +1,8 @@
 # Open Science Catalog Client
 
+[![PyPI - Version](https://img.shields.io/pypi/v/osc-metadata-client.svg)](https://pypi.org/project/osc-metadata-client)
+[![PyPI - Python Version](https://img.shields.io/pypi/pyversions/osc-metadata-client.svg)](https://pypi.org/project/osc-metadata-client)
+
 `osc-metadata-client` is a CLI tool that simplifies metadata production for the
 [Open Science Catalog](https://github.com/ESA-EarthCODE/open-science-catalog-metadata)
 starting from [CWL](https://www.commonwl.org/) workflows executed on
@@ -18,5 +21,4 @@ and output paths.
 
 ## License
 
-This software is released under the
-[Apache-2.0](https://www.apache.org/licenses/LICENSE-2.0) license.
+[![Apache License, Version 2.0](https://img.shields.io/badge/license-Apache%20License%202.0-blue)](https://www.apache.org/licenses/LICENSE-2.0)

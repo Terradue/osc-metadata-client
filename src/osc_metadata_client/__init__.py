@@ -43,6 +43,16 @@ import time
 
 PENDING = {StatusCode.ACCEPTED, StatusCode.RUNNING}
 
+CATALOG_METADATA = {
+    "workflow": ("workflows", "Geoscience workflows for experiments"),
+    "experiment": ("experiments", "Geoscience experiments"),
+    "product": (
+        "products",
+        "Geoscience products representing the measured or inferred values of one "
+        "or more variables over a given time range and spatial area",
+    ),
+}
+
 
 def create_client(ogc_api_endpoint: str, authorization_token: str | None) -> ApiClient:
     return ApiClient(
@@ -210,45 +220,68 @@ def dump_data(data: Mapping[str, Any], output: Path, rel: RelType = RelType.ITEM
 
     logger.success(f"OGC API Records serialized to {output.absolute()}.")
 
+    catalog: Catalog
     catalog_file = Path(output.parent.parent, "catalog.json")
 
     if catalog_file.exists():
         logger.info(f"Updating STAC Catalog from {output.absolute()}...")
 
-        href: str = f"./{data['id']}/record.json"
-
-        catalog: Catalog = Catalog.from_file(catalog_file)
-
-        # Check whether the same rel + href is already present
-        for link in catalog.links:
-            if link.get_href() == href:
-                logger.info(
-                    f"Link {href} already present in {output.absolute()}, update is not required."
-                )
-                return
-
-        catalog.add_link(
-            PystacLink(
-                rel=rel,
-                target=href,
-                media_type="application/json",
-                title=data["properties"]["title"]
-                if "properties" in data
-                else data["title"]
-                if "title" in data
-                else None,
-            )
-        )
-
-        logger.info(f"Saving STAC Catalog to {catalog_file.absolute()}...")
-        catalog.save_object(
-            include_self_link=False, dest_href=catalog_file.absolute().as_posix()
-        )
-        logger.success(f"STAC Catalog successfully saved to {catalog_file.absolute()}.")
+        catalog = Catalog.from_file(catalog_file)
     else:
         logger.warning(
-            f"Catalog file {catalog_file.absolute()} not found, skipping the update"
+            f"Catalog file {catalog_file.absolute()} not found, creating a new one"
         )
+
+        properties = data.get("properties", {})
+        resource_type = (
+            properties.get("osc:type")
+            or properties.get("type")
+            or data.get("osc:type")
+        )
+
+        if (
+            not isinstance(resource_type, str)
+            or resource_type not in CATALOG_METADATA
+        ):
+            raise ValueError(
+                f"Unsupported or missing OSC resource type: {resource_type!r}"
+            )
+
+        catalog_id, catalog_description = CATALOG_METADATA[resource_type]
+
+        catalog = Catalog(
+            id=catalog_id,
+            description=catalog_description,
+        )
+
+    href: str = f"./{data['id']}/record.json"
+
+    # Check whether the same rel + href is already present
+    for link in catalog.links:
+        if link.get_href() == href:
+            logger.info(
+                f"Link {href} already present in {output.absolute()}, update is not required."
+            )
+            return
+
+    catalog.add_link(
+        PystacLink(
+            rel=rel,
+            target=href,
+            media_type="application/json",
+            title=data["properties"]["title"]
+            if "properties" in data
+            else data["title"]
+            if "title" in data
+            else None,
+        )
+    )
+
+    logger.info(f"Saving STAC Catalog to {catalog_file.absolute()}...")
+    catalog.save_object(
+        include_self_link=False, dest_href=catalog_file.absolute().as_posix()
+    )
+    logger.success(f"STAC Catalog successfully saved to {catalog_file.absolute()}.")
 
 
 def serialize_yaml(data: Any, target_file: Path):
