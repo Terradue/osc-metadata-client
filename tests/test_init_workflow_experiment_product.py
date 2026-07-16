@@ -130,6 +130,40 @@ def test_dump_data_writes_json_and_updates_catalog(tmp_path, osc_modules) -> Non
     assert "./abc/record.json" in hrefs
 
 
+def test_dump_data_creates_catalog_for_each_resource_type(
+    tmp_path, osc_modules
+) -> None:
+    package = osc_modules["package"]
+    expected_catalogs = {
+        "workflow": ("workflows", "Geoscience workflows for experiments"),
+        "experiment": ("experiments", "Geoscience experiments"),
+        "product": (
+            "products",
+            "Geoscience products representing the measured or inferred values of one "
+            "or more variables over a given time range and spatial area",
+        ),
+    }
+
+    for resource_type, (catalog_id, description) in expected_catalogs.items():
+        output = tmp_path / resource_type / "abc" / "record.json"
+        package.dump_data(
+            {
+                "id": "abc",
+                "properties": {
+                    "osc:type": resource_type,
+                    "title": "Record title",
+                },
+            },
+            output,
+        )
+
+        catalog = pystac.Catalog.from_file(
+            (output.parent.parent / "catalog.json").as_posix()
+        )
+        assert catalog.id == catalog_id
+        assert catalog.description == description
+
+
 def test_dump_data_does_not_duplicate_existing_catalog_link(
     tmp_path, osc_modules
 ) -> None:
