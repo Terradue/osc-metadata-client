@@ -19,7 +19,17 @@ and this project uses SemVer-style release tags.
 
 ### Security
 
+## [0.5.0] - 2025-07-16
+
+### Fixed
+
+- Broken imports from the module iself.
+
 ## [0.4.0] - 2025-07-15
+
+### Added
+
+- Added _GEP Geobrowser_ alternate link to _Workflow_, _Experiment_ and _Product_.
 
 ### Changed
 
@@ -118,6 +128,7 @@ and this project uses SemVer-style release tags.
   issues.
 
 [Unreleased]: https://github.com/Terradue/osc-metadata-client/compare/v0.3.0...HEAD
+[0.5.0]: https://github.com/Terradue/osc-metadata-client/compare/v0.4.0...v0.5.0
 [0.4.0]: https://github.com/Terradue/osc-metadata-client/compare/v0.3.0...v0.4.0
 [0.3.0]: https://github.com/Terradue/osc-metadata-client/compare/v0.2.0...v0.3.0
 [0.2.0]: https://github.com/Terradue/osc-metadata-client/compare/v0.1.0-beta...v0.2.0
