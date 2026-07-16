@@ -19,6 +19,12 @@ and this project uses SemVer-style release tags.
 
 ### Security
 
+## [0.7.0] - 2025-07-16
+
+### Fixed
+
+- Broken GEP Geobrowser job results link
+
 ## [0.6.0] - 2025-07-16
 
 ### Changed

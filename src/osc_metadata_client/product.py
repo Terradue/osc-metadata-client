@@ -114,7 +114,7 @@ def execute(
             ),
             Link(
                 rel="alternate",
-                target=f"{geobrowser_endpoint}/jobs/{record_geojson.id}/results",
+                target=f"{geobrowser_endpoint}/jobs/{record_geojson.id}",
                 media_type="text/html",
                 title=f"GEP Geobrowser - Job Results: {record_geojson.id}",
             ),

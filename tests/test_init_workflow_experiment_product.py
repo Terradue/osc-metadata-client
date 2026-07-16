@@ -443,7 +443,7 @@ def test_product_execute_builds_collection_and_serializes(
     assert any(
         link.rel == "alternate"
         and link.target
-        == "https://geobrowser.example.com/processes/jobs/product-1/results"
+        == "https://geobrowser.example.com/processes/jobs/product-1"
         for link in collection.links
     )
     assert dumped["path"] == Path(tmp_path, "products/product-1/collection.json")
