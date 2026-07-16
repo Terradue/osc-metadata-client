@@ -19,6 +19,12 @@ and this project uses SemVer-style release tags.
 
 ### Security
 
+## [0.7.0] - 2025-07-16
+
+### Fixed
+
+- Broken GEP Geobrowser job results link
+
 ## [0.6.0] - 2025-07-16
 
 ### Changed
@@ -133,7 +139,8 @@ and this project uses SemVer-style release tags.
 - Fixed missing links, missing plugin configuration, broken tests, and lint
   issues.
 
-[Unreleased]: https://github.com/Terradue/osc-metadata-client/compare/v0.6.0...HEAD
+[Unreleased]: https://github.com/Terradue/osc-metadata-client/compare/v0.7.0...HEAD
+[0.7.0]: https://github.com/Terradue/osc-metadata-client/compare/v0.6.0...v0.7.0
 [0.6.0]: https://github.com/Terradue/osc-metadata-client/compare/v0.5.0...v0.6.0
 [0.5.0]: https://github.com/Terradue/osc-metadata-client/compare/v0.4.0...v0.5.0
 [0.4.0]: https://github.com/Terradue/osc-metadata-client/compare/v0.3.0...v0.4.0
