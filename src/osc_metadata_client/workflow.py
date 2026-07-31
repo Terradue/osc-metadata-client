@@ -12,11 +12,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from pathlib import Path
+
 from loguru import logger
+from transpiler_mate.ogcapi.records.ogcapi_records_models import Link, RecordGeoJSON
+
 from osc_metadata_client import cast_model, dump_data
 from osc_metadata_client.models import OscStatus, WorkflowProperties
-from pathlib import Path
-from transpiler_mate.ogcapi.records.ogcapi_records_models import Link, RecordGeoJSON
 
 
 def execute(
@@ -29,7 +31,7 @@ def execute(
 ) -> Path:
     logger.debug("Enriching OGCP API Records...")
 
-    record_geojson.links.append(  # type: ignore see osc_metadata_client.load_record_geojson
+    record_geojson.links.append(
         Link(
             rel="parent",
             href="../catalog.json",
@@ -40,7 +42,7 @@ def execute(
             updated=None,
         )
     )
-    record_geojson.links.append(  # type: ignore see osc_metadata_client.load_record_geojson
+    record_geojson.links.append(
         Link(
             href=source,
             hreflang="en-US",
@@ -51,7 +53,7 @@ def execute(
             updated=record_geojson.properties.created,
         )
     )
-    record_geojson.links.append(  # type: ignore see osc_metadata_client.load_record_geojson
+    record_geojson.links.append(
         Link(
             href="https://cwltool.readthedocs.io/en/latest/",
             hreflang="en-US",
@@ -62,7 +64,7 @@ def execute(
             updated=None,
         )
     )
-    record_geojson.links.append(  # type: ignore see osc_metadata_client.load_record_geojson
+    record_geojson.links.append(
         Link(
             href=f"{ogc_api_processes_endpoint}/processes/{record_geojson.id}",
             hreflang="en-US",
@@ -73,7 +75,7 @@ def execute(
             updated=None,
         )
     )
-    record_geojson.links.append(  # type: ignore see osc_metadata_client.load_record_geojson
+    record_geojson.links.append(
         Link(
             href=f"{geobrowser_endpoint}/processes/{record_geojson.id}",
             hreflang="en-US",

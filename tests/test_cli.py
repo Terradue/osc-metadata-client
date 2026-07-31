@@ -17,7 +17,6 @@ from __future__ import annotations
 from pathlib import Path
 
 from click.testing import CliRunner
-
 from transpiler_mate.ogcapi.records.ogcapi_records_models import (
     RecordCommonProperties,
     RecordGeoJSON,

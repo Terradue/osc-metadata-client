@@ -21,7 +21,6 @@ from pathlib import Path
 from types import SimpleNamespace
 
 import pystac
-
 from transpiler_mate.ogcapi.records.ogcapi_records_models import (
     Language,
     Link,

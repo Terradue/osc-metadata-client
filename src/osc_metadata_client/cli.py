@@ -12,21 +12,27 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from osc_metadata_client import load_record_geojson
-from osc_metadata_client.experiment import execute as execute_experiment
-from osc_metadata_client.product import execute as execute_product
-from osc_metadata_client.workflow import execute as execute_workflow
-from loguru import logger
+from __future__ import annotations
+
 from pathlib import Path
+from typing import TYPE_CHECKING
+
+import click
+from loguru import logger
 from requests import Session
 from requests.adapters import BaseAdapter, HTTPAdapter
 from session_adapters.bearer_auth_http_adapter import BearerAuthHTTPAdapter
 from session_adapters.file_adapter import FileAdapter
 from session_adapters.oci_adapter import OCIAdapter
 from transpiler_mate.cli.cli import _track
-from transpiler_mate.ogcapi.records.ogcapi_records_models import RecordGeoJSON
 
-import click
+from osc_metadata_client import load_record_geojson
+from osc_metadata_client.experiment import execute as execute_experiment
+from osc_metadata_client.product import execute as execute_product
+from osc_metadata_client.workflow import execute as execute_workflow
+
+if TYPE_CHECKING:
+    from transpiler_mate.ogcapi.records.ogcapi_records_models import RecordGeoJSON
 
 
 @click.group()

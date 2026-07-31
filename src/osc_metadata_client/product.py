@@ -12,24 +12,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from __future__ import annotations
+
 from datetime import datetime
-from loguru import logger
-from ogc_api_processes_client.api_client import ApiClient
-from ogc_api_processes_client.api.result_api import ResultApi
-from ogc_api_processes_client.models.status_info import StatusInfo
-from osc_metadata_client import (
-    create_client,
-    retrieve_status_info,
-    dump_data,
-    serialize_yaml,
-)
-from osc_metadata_client.osc_extension import OscExtension, OscStatus, OscType
-from osc_metadata_client.themes_extension import (
-    ThemeConcept,
-    Theme,
-    ThemesExtension,
-)
 from pathlib import Path
+from typing import TYPE_CHECKING
+
+from loguru import logger
+from ogc_api_processes_client.api.result_api import ResultApi
+from ogc_api_processes_client.models.status_info import StatusInfo  # noqa: TC002
 from pystac import (
     Collection,
     Extent,
@@ -38,7 +29,23 @@ from pystac import (
     SpatialExtent,
     TemporalExtent,
 )
-from transpiler_mate.ogcapi.records.ogcapi_records_models import RecordGeoJSON
+
+from osc_metadata_client import (
+    create_client,
+    dump_data,
+    retrieve_status_info,
+    serialize_yaml,
+)
+from osc_metadata_client.osc_extension import OscExtension, OscStatus, OscType
+from osc_metadata_client.themes_extension import (
+    Theme,
+    ThemeConcept,
+    ThemesExtension,
+)
+
+if TYPE_CHECKING:
+    from ogc_api_processes_client.api_client import ApiClient
+    from transpiler_mate.ogcapi.records.ogcapi_records_models import RecordGeoJSON
 
 
 def execute(

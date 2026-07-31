@@ -116,7 +116,7 @@ class OscExtension(
 
     @property
     def workflows(self) -> list[str] | None:
-        return cast(list[str] | None, self._get_property(WORKFLOWS_PROP, list[str]))
+        return cast("list[str] | None", self._get_property(WORKFLOWS_PROP, list[str]))
 
     @workflows.setter
     def workflows(self, value: list[str] | None) -> None:
@@ -140,7 +140,7 @@ class OscExtension(
 
     @property
     def variables(self) -> list[str] | None:
-        return cast(list[str] | None, self._get_property(VARIABLES_PROP, list[str]))
+        return cast("list[str] | None", self._get_property(VARIABLES_PROP, list[str]))
 
     @variables.setter
     def variables(self, value: list[str] | None) -> None:
@@ -148,7 +148,7 @@ class OscExtension(
 
     @property
     def missions(self) -> list[str] | None:
-        return cast(list[str] | None, self._get_property(MISSIONS_PROP, list[str]))
+        return cast("list[str] | None", self._get_property(MISSIONS_PROP, list[str]))
 
     @missions.setter
     def missions(self, value: list[str] | None) -> None:
@@ -171,10 +171,10 @@ class OscExtension(
         """Extend an Item or Collection with OSC fields."""
         if isinstance(obj, pystac.Collection):
             cls.ensure_has_extension(obj, add_if_missing)
-            return cast(OscExtension[T], CollectionOscExtension(obj))
+            return cast("OscExtension[T]", CollectionOscExtension(obj))
         if isinstance(obj, pystac.Item):
             cls.ensure_has_extension(obj, add_if_missing)
-            return cast(OscExtension[T], ItemOscExtension(obj))
+            return cast("OscExtension[T]", ItemOscExtension(obj))
 
         raise pystac.ExtensionTypeError(cls._ext_error_message(obj))
 
