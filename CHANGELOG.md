@@ -21,6 +21,10 @@ and this project uses SemVer-style release tags.
 
 ## [0.8.0] - 2025-07-31
 
+### Added
+
+- [Diátaxis](https://diataxis.fr/) documentation.
+
 ### Changed
 
 - Stronger code chekers with Ruff+McCabe & Bandit.

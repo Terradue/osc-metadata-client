@@ -1,46 +1,48 @@
 # Open Science Catalog Client
 
-`osc-metadata-client` is a CLI tool that simplifies metadata production for the
-[Open Science Catalog](https://github.com/ESA-EarthCODE/open-science-catalog-metadata)
-starting from [CWL](https://www.commonwl.org/) workflows executed on
-[OGC API - Processes](https://docs.ogc.org/is/18-062r2/18-062r2.html) instances.
+`osc-metadata-client` is a small connector that converts the metadata around
+[OGC API - Processes](https://docs.ogc.org/is/18-062r2/18-062r2.html)
+processes, jobs, and results into records for the ESA
+[Open Science Catalog](https://opensciencedata.esa.int/).
 
-It helps transform workflow descriptions and execution metadata into catalog-ready
-records for Open Science Catalog resources such as workflows, experiments, and
-products.
+It has one deliberately narrow responsibility:
 
-## Overview
+| OGC API - Processes resource | Open Science Catalog representation |
+| --- | --- |
+| Process and its annotated CWL source | Workflow OGC API Record |
+| Job and its inputs/status | Experiment OGC API Record |
+| Successful job result | Product STAC Collection |
 
-The tool is designed to support metadata generation workflows in the EarthCODE and
-Open Science Catalog ecosystem. It takes workflow definitions and execution context,
-extracts and enriches the relevant metadata, and serializes the resulting records in
-a form that can be published as part of an Open Science Catalog structure.
+The client is not a workflow engine, an OGC API - Processes server, or a catalog
+publisher. It prepares catalog-ready files that another publication workflow can
+commit or publish.
 
-In practice, `osc-metadata-client` helps bridge the gap between:
+## Built on Terradue's metadata API
 
-- workflow descriptions expressed as [Common Workflow Language](https://www.commonwl.org/)
-- execution metadata exposed by
-  [OGC API - Processes](https://docs.ogc.org/is/18-062r2/18-062r2.html) services
-- catalog metadata expected by the
-  [Open Science Catalog](https://github.com/ESA-EarthCODE/open-science-catalog-metadata)
+The initial CWL-to-OGC API Records conversion is performed by Terradue's
+[transpiler-mate](https://terradue.github.io/transpiler-mate/) Python API. This
+client builds on that conversion by adding Open Science Catalog resource types,
+relationships, provenance, OGC API - Processes links, and result metadata.
 
-## What It Produces
+## Native PySTAC extension support
 
-`osc-metadata-client` focuses on generating metadata for the main resource types involved in
-the processing lifecycle:
+The project includes proper, typed PySTAC implementations for both the
+[STAC Themes extension](https://github.com/stac-extensions/themes) and the
+[STAC Open Science Catalog extension](https://github.com/stac-extensions/osc).
+They use PySTAC's extension interfaces and hooks rather than inserting untyped
+JSON fields directly. See the [PySTAC extensions reference](reference/pystac-extensions.md).
 
-- workflow records derived from CWL application descriptions
-- experiment records derived from workflow executions
-- product collections derived from execution outputs
+## Choose the documentation you need
 
-This makes it easier to produce consistent metadata artifacts that can be integrated
-into Open Science Catalog repositories and publication pipelines.
+This documentation follows [Diátaxis](https://diataxis.fr/):
 
-The client supports HTTP(S), `file://`, and OCI workflow sources. OAuth2 bearer
-authentication is shared by HTTP(S) source retrieval and OGC API - Processes
-requests, while OCI registry credentials are used for OCI sources.
-
-See the [CLI reference](cli.md) for complete usage and output paths.
+- **Tutorial:** [create your first workflow record](tutorials/create-workflow-record.md)
+- **How-to guides:** [publish a processing lifecycle](how-to/publish-processing-lifecycle.md)
+  or [configure authentication and sources](how-to/configure-sources.md)
+- **Reference:** consult the [CLI](reference/cli.md),
+  [generated files](reference/outputs.md), or
+  [PySTAC extension API](reference/pystac-extensions.md)
+- **Explanation:** understand the [architecture and design boundaries](explanation/architecture.md)
 
 ## License
 
