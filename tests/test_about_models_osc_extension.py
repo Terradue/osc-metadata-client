@@ -17,7 +17,6 @@ from __future__ import annotations
 from datetime import datetime, timezone
 
 import pystac
-
 from transpiler_mate.ogcapi.records.ogcapi_records_models import RecordCommonProperties
 
 

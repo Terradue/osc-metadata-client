@@ -64,10 +64,10 @@ class ThemeConcept:
     @classmethod
     def from_dict(cls, d: dict[str, Any]) -> ThemeConcept:
         return cls(
-            id=cast(str, d["id"]),
-            title=cast(str | None, d.get("title")),
-            description=cast(str | None, d.get("description")),
-            url=cast(str | None, d.get("url")),
+            id=cast("str", d["id"]),
+            title=cast("str | None", d.get("title")),
+            description=cast("str | None", d.get("description")),
+            url=cast("str | None", d.get("url")),
         )
 
     def __repr__(self) -> str:
@@ -93,10 +93,10 @@ class Theme:
     @classmethod
     def from_dict(cls, d: dict[str, Any]) -> Theme:
         return cls(
-            scheme=cast(str, d["scheme"]),
+            scheme=cast("str", d["scheme"]),
             concepts=[
                 ThemeConcept.from_dict(concept)
-                for concept in cast(list[dict[str, Any]], d["concepts"])
+                for concept in cast("list[dict[str, Any]]", d["concepts"])
             ],
         )
 
@@ -141,13 +141,13 @@ class ThemesExtension(
         """Extend a Catalog, Collection, or Item with themes fields."""
         if isinstance(obj, pystac.Collection):
             cls.ensure_has_extension(obj, add_if_missing)
-            return cast(ThemesExtension[T], CollectionThemesExtension(obj))
+            return cast("ThemesExtension[T]", CollectionThemesExtension(obj))
         if isinstance(obj, pystac.Catalog):
             cls.ensure_has_extension(obj, add_if_missing)
-            return cast(ThemesExtension[T], CatalogThemesExtension(obj))
+            return cast("ThemesExtension[T]", CatalogThemesExtension(obj))
         if isinstance(obj, pystac.Item):
             cls.ensure_has_extension(obj, add_if_missing)
-            return cast(ThemesExtension[T], ItemThemesExtension(obj))
+            return cast("ThemesExtension[T]", ItemThemesExtension(obj))
 
         raise pystac.ExtensionTypeError(cls._ext_error_message(obj))
 

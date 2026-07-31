@@ -12,23 +12,30 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from __future__ import annotations
+
+import json
+import time
+from collections.abc import Mapping
 from gzip import GzipFile
 from io import BytesIO, TextIOWrapper
+from pathlib import Path
+from tempfile import NamedTemporaryFile
+from typing import TYPE_CHECKING, Any, TypeVar
+
+import yaml
 from loguru import logger
-from ogc_api_processes_client.api_client import ApiClient
 from ogc_api_processes_client.api.status_api import StatusApi
+from ogc_api_processes_client.api_client import ApiClient
 from ogc_api_processes_client.configuration import Configuration
 from ogc_api_processes_client.models.status_code import StatusCode
-from ogc_api_processes_client.models.status_info import StatusInfo
-from pathlib import Path
+from ogc_api_processes_client.models.status_info import StatusInfo  # noqa: TC002
 from pydantic import BaseModel
-from pystac import Catalog, Link as PystacLink, RelType
+from pystac import Catalog, RelType
+from pystac import Link as PystacLink
 from requests import Session
 from session_adapters.http_conts import DEFAULT_ENCODING
-from tempfile import NamedTemporaryFile
-from typing import Any, Mapping, TypeVar
 from transpiler_mate.metadata import MetadataManager
-from transpiler_mate.metadata.software_application_models import SoftwareApplication
 from transpiler_mate.ogcapi.records import OgcRecordsTranspiler
 from transpiler_mate.ogcapi.records.ogcapi_records_models import (
     Coordinate,
@@ -37,9 +44,8 @@ from transpiler_mate.ogcapi.records.ogcapi_records_models import (
     RecordGeoJSON,
 )
 
-import yaml
-import json
-import time
+if TYPE_CHECKING:
+    from transpiler_mate.metadata.software_application_models import SoftwareApplication
 
 PENDING = {StatusCode.ACCEPTED, StatusCode.RUNNING}
 
@@ -77,7 +83,7 @@ def retrieve_status_info(api_client: ApiClient, job_id: str) -> StatusInfo:
 
         logger.debug(f"Job {job_id} status is {status_info.status}")
 
-    if StatusCode.SUCCESSFUL != status_info.status:
+    if status_info.status != StatusCode.SUCCESSFUL:
         raise Exception(
             f"Impossible to create the OGC API Records 'Experiment', job '{job_id}' terminated with status '{status_info.status}', report to your provider"
         )
@@ -90,9 +96,12 @@ def load_record_geojson(
     source: str,
     project_id: str,
     project_name: str,
-    session: Session = Session(),
+    session: Session | None = None,
 ) -> RecordGeoJSON:
     logger.debug(f"> GET {source}...")
+
+    if session is None:
+        session = Session()
 
     response = session.get(source, stream=True)
     response.raise_for_status()
@@ -106,15 +115,20 @@ def load_record_geojson(
     remaining = response.raw.read()  # Read rest of the stream
     combined = BytesIO(magic + remaining)
 
-    if b"\x1f\x8b" == magic:
+    input_stream: TextIOWrapper[Any]
+    if magic == b"\x1f\x8b":
         logger.debug(f"gzip compression detected in response body from {source}")
-        buffer = GzipFile(fileobj=combined)
+        input_stream = TextIOWrapper(
+            GzipFile(fileobj=combined), encoding=DEFAULT_ENCODING
+        )
     else:
-        buffer = combined
+        input_stream = TextIOWrapper(combined, encoding=DEFAULT_ENCODING)
 
-    input_stream = TextIOWrapper(buffer, encoding=DEFAULT_ENCODING)
-
-    fd = NamedTemporaryFile(mode="w", suffix=".cwl", encoding=DEFAULT_ENCODING)
+    # The explicit finally below guarantees closure while keeping the processing
+    # pipeline at a readable indentation level.
+    fd = NamedTemporaryFile(  # noqa: SIM115
+        mode="w", suffix=".cwl", encoding=DEFAULT_ENCODING
+    )
 
     try:
         tmp_path = Path(fd.name)
@@ -259,16 +273,19 @@ def dump_data(data: Mapping[str, Any], output: Path, rel: RelType = RelType.ITEM
             )
             return
 
+    properties = data.get("properties")
+    title = (
+        properties.get("title")
+        if isinstance(properties, Mapping)
+        else data.get("title")
+    )
+
     catalog.add_link(
         PystacLink(
             rel=rel,
             target=href,
             media_type="application/json",
-            title=data["properties"]["title"]
-            if "properties" in data
-            else data["title"]
-            if "title" in data
-            else None,
+            title=title,
         )
     )
 

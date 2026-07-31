@@ -18,9 +18,9 @@
 
 from __future__ import annotations
 
-from datetime import datetime
+from datetime import datetime  # noqa: TC003  Pydantic resolves this at runtime.
 from enum import Enum
-from typing import Any, Optional
+from typing import Any
 
 from pydantic import Field, RootModel
 from transpiler_mate.ogcapi.records.ogcapi_records_models import RecordCommonProperties
@@ -37,42 +37,36 @@ class OscStatus(Enum):
 
 
 class WorkflowProperties(RecordCommonProperties):
-    osc_type: Optional[str] = Field("workflow", alias="osc:type")
-    osc_project: Optional[str] = Field(None, alias="osc:project")
-    osc_status: Optional[OscStatus] = Field(None, alias="osc:status")
+    osc_type: str | None = Field("workflow", alias="osc:type")
+    osc_project: str | None = Field(None, alias="osc:project")
+    osc_status: OscStatus | None = Field(None, alias="osc:status")
 
 
 class ExperimentProperties(RecordCommonProperties):
-    osc_project: Optional[str] = Field(None, alias="osc:project")
-    osc_workflow: Optional[str] = Field(None, alias="osc:workflow")
-    osc_prov_generated_by: Optional[str] = Field(None, alias="osc-prov:generatedBy")
-    osc_prov_started_at_time: Optional[datetime] = Field(
+    osc_project: str | None = Field(None, alias="osc:project")
+    osc_workflow: str | None = Field(None, alias="osc:workflow")
+    osc_prov_generated_by: str | None = Field(None, alias="osc-prov:generatedBy")
+    osc_prov_started_at_time: datetime | None = Field(
         None, alias="osc-prov:startedAtTime"
     )
-    osc_prov_ended_at_time: Optional[datetime] = Field(
-        None, alias="osc-prov:endedAtTime"
-    )
-    osc_prov_generated: Optional[str] = Field(None, alias="osc-prov:generated")
-    osc_prov_described_by_workflow: Optional[str] = Field(
+    osc_prov_ended_at_time: datetime | None = Field(None, alias="osc-prov:endedAtTime")
+    osc_prov_generated: str | None = Field(None, alias="osc-prov:generated")
+    osc_prov_described_by_workflow: str | None = Field(
         None, alias="osc-prov:describedByWorkflow"
     )
 
 
 class ProductProperties(RecordCommonProperties):
-    osc_experiment: Optional[str] = Field(None, alias="osc:experiment")
-    osc_status: Optional[str] = Field(None, alias="osc:status")
-    osc_region: Optional[str] = Field(None, alias="osc:region")
-    osc_type: Optional[str] = Field(None, alias="osc:type")
-    osc_project: Optional[str] = Field(None, alias="osc:project")
-    osc_missions: Optional[str] = Field(None, alias="osc:missions")
-    osc_variables: Optional[str] = Field(None, alias="osc:variables")
-    osc_prov_type: Optional[str] = Field(None, alias="osc-prov:type")
-    osc_prov_was_derived_from: Optional[str] = Field(
-        None, alias="osc-prov:wasDerivedFrom"
-    )
-    osc_prov_was_output_from: Optional[str] = Field(
-        None, alias="osc-prov:wasOutputFrom"
-    )
-    osc_prov_described_by_parameter: Optional[str] = Field(
+    osc_experiment: str | None = Field(None, alias="osc:experiment")
+    osc_status: str | None = Field(None, alias="osc:status")
+    osc_region: str | None = Field(None, alias="osc:region")
+    osc_type: str | None = Field(None, alias="osc:type")
+    osc_project: str | None = Field(None, alias="osc:project")
+    osc_missions: str | None = Field(None, alias="osc:missions")
+    osc_variables: str | None = Field(None, alias="osc:variables")
+    osc_prov_type: str | None = Field(None, alias="osc-prov:type")
+    osc_prov_was_derived_from: str | None = Field(None, alias="osc-prov:wasDerivedFrom")
+    osc_prov_was_output_from: str | None = Field(None, alias="osc-prov:wasOutputFrom")
+    osc_prov_described_by_parameter: str | None = Field(
         None, alias="osc-prov:describedByParameter"
     )

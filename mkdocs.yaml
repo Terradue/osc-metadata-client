@@ -16,7 +16,7 @@ site_name: Open Science Catalog client
 
 theme:
   logo: imgs/icon-eoap.png
-  name: material
+  name: readthedocs
 
   palette:
   - media: "(prefers-color-scheme: light)"
@@ -78,10 +78,20 @@ extra_javascript:
 - https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js
 
 nav:
-- Introduction: 'index.md'
-- cli.md
-- CWLs:
-  - Publish OSC Workflow: c4/components/workflow/publish_workflow.md
-  - Publish OSC Experiment and Product: c4/components/workflow/publish_experiment_products.md
+- Home: index.md
+- Tutorials:
+  - Create your first workflow record: tutorials/create-workflow-record.md
+- How-to guides:
+  - Publish a processing lifecycle: how-to/publish-processing-lifecycle.md
+  - Configure sources and authentication: how-to/configure-sources.md
+- Reference:
+  - CLI: reference/cli.md
+  - Generated files: reference/outputs.md
+  - PySTAC extensions: reference/pystac-extensions.md
+  - CWL publication workflows:
+    - Publish OSC Workflow: c4/components/workflow/publish_workflow.md
+    - Publish OSC Experiment and Product: c4/components/workflow/publish_experiment_products.md
+- Explanation:
+  - Architecture: explanation/architecture.md
 
 copyright: <a href="https://www.apache.org/licenses/LICENSE-2.0"><img src="https://img.shields.io/badge/license-Apache%20License%202.0-blue"" alt="Apache License, Version 2.0" /></a>
