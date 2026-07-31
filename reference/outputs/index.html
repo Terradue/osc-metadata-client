@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="shortcut icon" href="../../img/favicon.ico" />
+    <title>Generated files - Open Science Catalog client</title>
+    <link rel="stylesheet" href="../../css/theme.css" />
+    <link rel="stylesheet" href="../../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+        <link href="../../styles/css/app.css" rel="stylesheet" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Generated files";
+        var mkdocs_page_input_path = "reference/outputs.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="../..">
+          <img src="../../imgs/icon-eoap.png" class="logo" alt="Logo"/>
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../..">Home</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Tutorials</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../tutorials/create-workflow-record/">Create your first workflow record</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">How-to guides</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../how-to/publish-processing-lifecycle/">Publish a processing lifecycle</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../how-to/configure-sources/">Configure sources and authentication</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Reference</span></p>
+              <ul class="current">
+                  <li class="toctree-l1"><a class="reference internal" href="../cli/">CLI</a>
+                  </li>
+                  <li class="toctree-l1 current"><a class="reference internal current" href="#">Generated files</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#workflow-record">Workflow record</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#experiment-record">Experiment record</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#product-collection">Product collection</a>
+    </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../pystac-extensions/">PySTAC extensions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" >CWL publication workflows</a>
+    <ul>
+                <li class="toctree-l2"><a class="reference internal" href="../../c4/components/workflow/publish_workflow/">Publish OSC Workflow</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../../c4/components/workflow/publish_experiment_products/">Publish OSC Experiment and Product</a>
+                </li>
+    </ul>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Explanation</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../explanation/architecture/">Architecture</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../..">Open Science Catalog client</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../.." class="icon icon-home" aria-label="Docs"></a></li>
+          <li class="breadcrumb-item">Reference</li>
+      <li class="breadcrumb-item active">Generated files</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="generated-files-reference">Generated files reference</h1>
+<p>The output directory follows the Open Science Catalog resource layout.</p>
+<table>
+<thead>
+<tr>
+<th>Command</th>
+<th>Primary record</th>
+<th>Companion data</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>workflow</code></td>
+<td><code>workflows/ID/record.json</code></td>
+<td>none</td>
+</tr>
+<tr>
+<td><code>experiment</code></td>
+<td><code>experiments/ID/record.json</code></td>
+<td><code>experiments/ID/input.yaml</code></td>
+</tr>
+<tr>
+<td><code>products</code></td>
+<td><code>products/ID/collection.json</code></td>
+<td><code>products/ID/output.yaml</code></td>
+</tr>
+</tbody>
+</table>
+<p>The client also creates or updates the resource-level <code>catalog.json</code> associated
+with the generated record.</p>
+<h2 id="workflow-record">Workflow record</h2>
+<p>The workflow is an OGC API Record derived from Schema.org metadata in the CWL
+source. It has <code>osc:type: workflow</code>, identifies its OSC project, and links to the
+CWL application, OGC process, Geobrowser process page, project, and catalog.</p>
+<h2 id="experiment-record">Experiment record</h2>
+<p>The experiment is an OGC API Record for an OGC job. It records the workflow and
+project relationships, execution start/end provenance, a <code>/jobs/{id}</code> link, and
+an <code>input</code> link to <code>input.yaml</code>.</p>
+<p>The record also contains an <code>environment</code> link to <code>environment.yaml</code>. The client
+does not create that environment file; a surrounding publication workflow may
+supply it.</p>
+<h2 id="product-collection">Product collection</h2>
+<p>The product is a STAC Collection for a successful job result. It links to the
+project, experiment, theme, <code>/jobs/{id}/results</code>, Geobrowser job page, and
+<code>output.yaml</code>.</p>
+<p>The collection declares the versioned OSC and Themes schema URIs in
+<code>stac_extensions</code>, and stores their fields through the corresponding typed
+PySTAC implementations.</p>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../cli/" class="btn btn-neutral float-left" title="CLI"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../pystac-extensions/" class="btn btn-neutral float-right" title="PySTAC extensions">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+      <p><a href="https://www.apache.org/licenses/LICENSE-2.0"><img src="https://img.shields.io/badge/license-Apache%20License%202.0-blue"" alt="Apache License, Version 2.0" /></a></p>
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+      <span><a href="../cli/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../pystac-extensions/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "../..";</script>
+    <script src="../../js/theme_extra.js"></script>
+    <script src="../../js/theme.js"></script>
+      <script src="../../javascripts/config.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+      <script src="../../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

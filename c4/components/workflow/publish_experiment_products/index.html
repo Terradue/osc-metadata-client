@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="shortcut icon" href="../../../../img/favicon.ico" />
+    <title>Publish OSC Experiment and Product - Open Science Catalog client</title>
+    <link rel="stylesheet" href="../../../../css/theme.css" />
+    <link rel="stylesheet" href="../../../../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+        <link href="../../../../styles/css/app.css" rel="stylesheet" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Publish OSC Experiment and Product";
+        var mkdocs_page_input_path = "c4/components/workflow/publish_experiment_products.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../../../../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="../../../..">
+          <img src="../../../../imgs/icon-eoap.png" class="logo" alt="Logo"/>
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../..">Home</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Tutorials</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../../../tutorials/create-workflow-record/">Create your first workflow record</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">How-to guides</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../../../how-to/publish-processing-lifecycle/">Publish a processing lifecycle</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../../../how-to/configure-sources/">Configure sources and authentication</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Reference</span></p>
+              <ul class="current">
+                  <li class="toctree-l1"><a class="reference internal" href="../../../../reference/cli/">CLI</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../../../reference/outputs/">Generated files</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../../../reference/pystac-extensions/">PySTAC extensions</a>
+                  </li>
+                  <li class="toctree-l1 current"><a class="reference internal current" >CWL publication workflows</a>
+    <ul class="current">
+                <li class="toctree-l2"><a class="reference internal" href="../publish_workflow/">Publish OSC Workflow</a>
+                </li>
+                <li class="toctree-l2 current"><a class="reference internal current" href="#">Publish OSC Experiment and Product</a>
+    <ul class="current">
+    <li class="toctree-l3"><a class="reference internal" href="#project-team">Project Team</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#authors">Authors</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#contributors">Contributors</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#user-manual">User Manual</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#runtime-environment">Runtime environment</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#supported-operating-systems">Supported Operating Systems</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#requirements">Requirements</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#software-source-code">Software Source code</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#publish_experiment_products">publish_experiment_products</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#cwl-class">CWL Class</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#requirements_1">Requirements</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#inputs">Inputs</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#steps">Steps</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#outputs">Outputs</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#ogc-api-processes">OGC API - Processes</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#uml-diagrams">UML Diagrams</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#run-in-step">Run in step</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#sync_git_repository_cli">sync_git_repository_cli</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#cwl-class_1">CWL Class</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#inputs_2">Inputs</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#execution-usage-example">Execution usage example:</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#run-in-step_1">Run in step</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#publish_experiment_cli">publish_experiment_cli</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#cwl-class_2">CWL Class</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#inputs_3">Inputs</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#execution-usage-example_1">Execution usage example:</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#run-in-step_2">Run in step</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#publish_product_cli">publish_product_cli</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#cwl-class_3">CWL Class</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#inputs_4">Inputs</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#execution-usage-example_2">Execution usage example:</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#run-in-step_3">Run in step</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#commit_and_push_cli">commit_and_push_cli</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#cwl-class_4">CWL Class</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#inputs_5">Inputs</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#execution-usage-example_3">Execution usage example:</a>
+    </li>
+        </ul>
+    </li>
+    </ul>
+                </li>
+    </ul>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Explanation</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../../../explanation/architecture/">Architecture</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../..">Open Science Catalog client</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../../.." class="icon icon-home" aria-label="Docs"></a></li>
+          <li class="breadcrumb-item">Reference</li>
+          <li class="breadcrumb-item">CWL publication workflows</li>
+      <li class="breadcrumb-item active">Publish OSC Experiment and Product</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="osc-client-publish-experiment-and-product-v010">OSC Client - Publish <code>experiment</code> and <code>product</code> v0.1.0</h1>
+<p>ESA Open Science Catalog Client</p>
+<blockquote>
+<p>This software is licensed under the terms of the <a href="https://www.apache.org/licenses/LICENSE-2.0">Apache License 2.0</a> license - SPDX short identifier: <a href="https://spdx.org/licenses/Apache-2.0">Apache-2.0</a></p>
+<p>2026-05-12 - 2026-05-21T15:36:17.094 Copyright <a href="mailto:info@terradue.com">Terradue Srl</a> - &gt; <a href="https://ror.org/0069cx113">https://ror.org/0069cx113</a></p>
+</blockquote>
+<h2 id="project-team">Project Team</h2>
+<h3 id="authors">Authors</h3>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Email</th>
+<th>Organization</th>
+<th>Role</th>
+<th>Identifier</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Brito, Fabrice</td>
+<td><a href="mailto:fabrice.brito@terradue.com">fabrice.brito@terradue.com</a></td>
+<td><a href="https://ror.org/0069cx113">Terradue</a></td>
+<td><a href="http://purl.org/spar/datacite/ProjectManager">Project Manager</a></td>
+<td><a href="https://orcid.org/0009-0000-1342-9736">https://orcid.org/0009-0000-1342-9736</a></td>
+</tr>
+<tr>
+<td>Tripodi, Simone</td>
+<td><a href="mailto:simone.tripodi@terradue.com">simone.tripodi@terradue.com</a></td>
+<td><a href="https://ror.org/0069cx113">Terradue</a></td>
+<td><a href="http://purl.org/spar/datacite/ProjectLeader">Project Leader</a></td>
+<td><a href="https://orcid.org/0009-0006-2063-618X">https://orcid.org/0009-0006-2063-618X</a></td>
+</tr>
+</tbody>
+</table>
+<h3 id="contributors">Contributors</h3>
+<p>The are no contributors for this project.</p>
+<h2 id="user-manual">User Manual</h2>
+<p>User Manual can be found on <a href="https://terradue.github.io/osc-metadata-client/">https://terradue.github.io/osc-metadata-client/</a>.</p>
+<h2 id="runtime-environment">Runtime environment</h2>
+<h3 id="supported-operating-systems">Supported Operating Systems</h3>
+<ul>
+<li>Linux</li>
+<li>MacOS X</li>
+</ul>
+<h3 id="requirements">Requirements</h3>
+<ul>
+<li><a href="https://cwltool.readthedocs.io/en/latest/">https://cwltool.readthedocs.io/en/latest/</a></li>
+<li><a href="https://www.python.org/">https://www.python.org/</a></li>
+</ul>
+<h2 id="software-source-code">Software Source code</h2>
+<ul>
+<li>Browsable version of the <a href="https://github.com/Terradue/osc-metadata-client.git">source repository</a>;</li>
+<li><a href="https://github.com/Terradue/osc-metadata-client/actions">Continuous integration</a> system used by the project;</li>
+<li>Issues, bugs, and feature requests should be submitted to the following <a href="https://github.com/Terradue/osc-metadata-client/issues">issue management</a> system for this project</li>
+</ul>
+<hr />
+<h2 id="publish_experiment_products">publish_experiment_products</h2>
+<h3 id="cwl-class">CWL Class</h3>
+<p><a href="https://www.commonwl.org/v1.2/Workflow.html#Workflow">Workflow</a></p>
+<h3 id="requirements_1">Requirements</h3>
+<ul>
+<li><a href="https://www.commonwl.org/v1.2/Workflow.html#MultipleInputFeatureRequirement">MultipleInputFeatureRequirement</a></li>
+<li><a href="https://www.commonwl.org/v1.2/Workflow.html#SchemaDefRequirement">SchemaDefRequirement</a></li>
+<li><a href="https://www.commonwl.org/v1.2/Workflow.html#StepInputExpressionRequirement">StepInputExpressionRequirement</a></li>
+</ul>
+<h3 id="inputs">Inputs</h3>
+<table>
+<thead>
+<tr>
+<th>Id</th>
+<th>Type</th>
+<th>Label</th>
+<th>Doc</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>job_id</code></td>
+<td><a href="https://www.commonwl.org/v1.2/Workflow.html#CWLType">string</a></td>
+<td>None</td>
+<td>None</td>
+</tr>
+<tr>
+<td><code>project_id</code></td>
+<td><a href="https://www.commonwl.org/v1.2/Workflow.html#CWLType">string</a></td>
+<td>None</td>
+<td>None</td>
+</tr>
+<tr>
+<td><code>project_name</code></td>
+<td><a href="https://www.commonwl.org/v1.2/Workflow.html#CWLType">string</a></td>
+<td>None</td>
+<td>None</td>
+</tr>
+<tr>
+<td><code>ogc_api_processes_endpoint</code></td>
+<td><a href="https://raw.githubusercontent.com/eoap/schemas/main/string_format.yaml#URI">URI</a>:<ul><li><code>value</code>: <a href="https://www.commonwl.org/v1.2/Workflow.html#CWLType">string</a></li></ul></td>
+<td>None</td>
+<td>None</td>
+</tr>
+<tr>
+<td><code>cwl_workflow_location</code></td>
+<td><a href="https://raw.githubusercontent.com/eoap/schemas/main/string_format.yaml#URI">URI</a>:<ul><li><code>value</code>: <a href="https://www.commonwl.org/v1.2/Workflow.html#CWLType">string</a></li></ul></td>
+<td>None</td>
+<td>None</td>
+</tr>
+<tr>
+<td><code>workflow_id</code></td>
+<td><a href="https://www.commonwl.org/v1.2/Workflow.html#CWLType">string</a></td>
+<td>None</td>
+<td>None</td>
+</tr>
+<tr>
+<td><code>authorization_token</code></td>
+<td><a href="https://www.commonwl.org/v1.2/Workflow.html#CWLType">string</a></td>
+<td>None</td>
+<td>None</td>
+</tr>
+</tbody>
+</table>
+<h3 id="steps">Steps</h3>
+<table>
+<thead>
+<tr>
+<th>Id</th>
+<th>Runs</th>
+<th>Label</th>
+<th>Doc</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="#sync_git_repository_cli">sync_git_repository</a></td>
+<td><code>#sync_git_repository_cli</code></td>
+<td>None</td>
+<td>None</td>
+</tr>
+<tr>
+<td><a href="#publish_experiment_cli">publish_experiment</a></td>
+<td><code>#publish_experiment_cli</code></td>
+<td>None</td>
+<td>None</td>
+</tr>
+<tr>
+<td><a href="#publish_product_cli">publish_product</a></td>
+<td><code>#publish_product_cli</code></td>
+<td>None</td>
+<td>None</td>
+</tr>
+<tr>
+<td><a href="#commit_and_push_cli">commit_and_push</a></td>
+<td><code>#commit_and_push_cli</code></td>
+<td>None</td>
+<td>None</td>
+</tr>
+</tbody>
+</table>
+<h3 id="outputs">Outputs</h3>
+<table>
+<thead>
+<tr>
+<th>Id</th>
+<th>Type</th>
+<th>Label</th>
+<th>Doc</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>publish_experiment_log</code></td>
+<td><a href="https://www.commonwl.org/v1.2/Workflow.html#CWLType">string</a></td>
+<td>None</td>
+<td>None</td>
+</tr>
+<tr>
+<td><code>publish_product_log</code></td>
+<td><a href="https://www.commonwl.org/v1.2/Workflow.html#CWLType">string</a></td>
+<td>None</td>
+<td>None</td>
+</tr>
+</tbody>
+</table>
+<h3 id="ogc-api-processes">OGC API - Processes</h3>
+<p>When <code>publish_experiment_products</code> <a href="https://www.commonwl.org/v1.2/Workflow.html#Workflow">Workflow</a> is exposed through <a href="https://docs.ogc.org/is/18-062r2/18-062r2.html">OGC API - Processes - Part 1: Core</a>, <code>inputs</code> and <code>outputs</code> fields below represent the interface of the <a href="https://developer.ogc.org/api/processes/index.html#tag/ProcessDescription/operation/getProcessDescription">getProcessDescription</a> API. </p>
+<h4 id="inputs_1">Inputs</h4>
+<p><img alt="publish_experiment_products OGC API Processes JSON Inputs schema" src="ogc_processes_inputs.svg" title="publish_experiment_products  diagram" /></p>
+<h4 id="outputs_1">Outputs</h4>
+<p><img alt="publish_experiment_products OGC API Processes JSON Outputs schema" src="ogc_processes_outputs.svg" title="publish_experiment_products  diagram" /></p>
+<h3 id="uml-diagrams">UML Diagrams</h3>
+<h4 id="activity-diagram">Activity diagram</h4>
+<p>Learn more about the <a href="https://en.wikipedia.org/wiki/Activity_diagram">Activity diagram</a> below.</p>
+<p><img alt="publish_experiment_products flow diagram" src="activity.svg" title="publish_experiment_products Activity diagram" /></p>
+<h4 id="component-diagram">Component diagram</h4>
+<p>Learn more about the <a href="https://en.wikipedia.org/wiki/Component_diagram">Component diagram</a> below.</p>
+<p><img alt="publish_experiment_products flow diagram" src="component.svg" title="publish_experiment_products Component diagram" /></p>
+<h4 id="class-diagram">Class diagram</h4>
+<p>Learn more about the <a href="https://en.wikipedia.org/wiki/Class_diagram">Class diagram</a> below.</p>
+<p><img alt="publish_experiment_products flow diagram" src="class.svg" title="publish_experiment_products Class diagram" /></p>
+<h4 id="sequence-diagram">Sequence diagram</h4>
+<p>Learn more about the <a href="https://en.wikipedia.org/wiki/Sequence_diagram">Sequence diagram</a> below.</p>
+<p><img alt="publish_experiment_products flow diagram" src="sequence.svg" title="publish_experiment_products Sequence diagram" /></p>
+<h4 id="state-diagram">State diagram</h4>
+<p>Learn more about the <a href="https://en.wikipedia.org/wiki/State_diagram">State diagram</a> below.</p>
+<p><img alt="publish_experiment_products flow diagram" src="state.svg" title="publish_experiment_products State diagram" /></p>
+<h3 id="run-in-step">Run in step</h3>
+<p><code>sync_git_repository</code></p>
+<h2 id="sync_git_repository_cli">sync_git_repository_cli</h2>
+<h3 id="cwl-class_1">CWL Class</h3>
+<p><a href="https://www.commonwl.org/v1.2/CommandLineTool.html#CommandLineTool">CommandLineTool</a></p>
+<h3 id="inputs_2">Inputs</h3>
+<table>
+<thead>
+<tr>
+<th>Id</th>
+<th>Option</th>
+<th>Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id="execution-usage-example">Execution usage example:</h3>
+<div class="highlight"><pre><span></span><code><span id="__span-0-1">bash sync_git_repository_cli.sh \
+</span></code></pre></div>
+<h3 id="run-in-step_1">Run in step</h3>
+<p><code>publish_experiment</code></p>
+<h2 id="publish_experiment_cli">publish_experiment_cli</h2>
+<h3 id="cwl-class_2">CWL Class</h3>
+<p><a href="https://www.commonwl.org/v1.2/CommandLineTool.html#CommandLineTool">CommandLineTool</a></p>
+<h3 id="inputs_3">Inputs</h3>
+<table>
+<thead>
+<tr>
+<th>Id</th>
+<th>Option</th>
+<th>Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>job_id</code></td>
+<td><code>--id</code></td>
+<td><a href="https://www.commonwl.org/v1.2/Workflow.html#CWLType">string</a></td>
+</tr>
+<tr>
+<td><code>project_id</code></td>
+<td><code>--project-id</code></td>
+<td><a href="https://www.commonwl.org/v1.2/Workflow.html#CWLType">string</a></td>
+</tr>
+<tr>
+<td><code>project_name</code></td>
+<td><code>--project-name</code></td>
+<td><a href="https://www.commonwl.org/v1.2/Workflow.html#CWLType">string</a></td>
+</tr>
+<tr>
+<td><code>ogc_api_processes_endpoint</code></td>
+<td><code>--ogc-api-processes-endpoint</code></td>
+<td><a href="https://raw.githubusercontent.com/eoap/schemas/main/string_format.yaml#URI">URI</a>:<ul><li><code>value</code>: <a href="https://www.commonwl.org/v1.2/Workflow.html#CWLType">string</a></li></ul></td>
+</tr>
+<tr>
+<td><code>osc_location</code></td>
+<td><code>--output</code></td>
+<td><a href="https://www.commonwl.org/v1.2/Workflow.html#Directory">Directory</a></td>
+</tr>
+<tr>
+<td><code>cwl_workflow_location</code></td>
+<td><code>--cwl_workflow_location</code></td>
+<td><a href="https://raw.githubusercontent.com/eoap/schemas/main/string_format.yaml#URI">URI</a>:<ul><li><code>value</code>: <a href="https://www.commonwl.org/v1.2/Workflow.html#CWLType">string</a></li></ul></td>
+</tr>
+<tr>
+<td><code>workflow_id</code></td>
+<td><code>--workflow-id</code></td>
+<td><a href="https://www.commonwl.org/v1.2/Workflow.html#CWLType">string</a></td>
+</tr>
+<tr>
+<td><code>authorization_token</code></td>
+<td><code>--authorization-token</code></td>
+<td><a href="https://www.commonwl.org/v1.2/Workflow.html#CWLType">string</a></td>
+</tr>
+</tbody>
+</table>
+<h3 id="execution-usage-example_1">Execution usage example:</h3>
+<div class="highlight"><pre><span></span><code><span id="__span-1-1">osc-metadata-client &lt;ARGUMENT_DYNAMICALLY_SET&gt; \
+</span><span id="__span-1-2">--id &lt;JOB_ID&gt; \
+</span><span id="__span-1-3">--project-id &lt;PROJECT_ID&gt; \
+</span><span id="__span-1-4">--project-name &lt;PROJECT_NAME&gt; \
+</span><span id="__span-1-5">--ogc-api-processes-endpoint &lt;OGC_API_PROCESSES_ENDPOINT&gt; \
+</span><span id="__span-1-6">--output &lt;OSC_LOCATION&gt; \
+</span><span id="__span-1-7">--cwl_workflow_location &lt;CWL_WORKFLOW_LOCATION&gt; \
+</span><span id="__span-1-8">--workflow-id &lt;WORKFLOW_ID&gt; \
+</span><span id="__span-1-9">--authorization-token &lt;AUTHORIZATION_TOKEN&gt;
+</span></code></pre></div>
+<h3 id="run-in-step_2">Run in step</h3>
+<p><code>publish_product</code></p>
+<h2 id="publish_product_cli">publish_product_cli</h2>
+<h3 id="cwl-class_3">CWL Class</h3>
+<p><a href="https://www.commonwl.org/v1.2/CommandLineTool.html#CommandLineTool">CommandLineTool</a></p>
+<h3 id="inputs_4">Inputs</h3>
+<table>
+<thead>
+<tr>
+<th>Id</th>
+<th>Option</th>
+<th>Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>job_id</code></td>
+<td><code>--id</code></td>
+<td><a href="https://www.commonwl.org/v1.2/Workflow.html#CWLType">string</a></td>
+</tr>
+<tr>
+<td><code>project_id</code></td>
+<td><code>--project-id</code></td>
+<td><a href="https://www.commonwl.org/v1.2/Workflow.html#CWLType">string</a></td>
+</tr>
+<tr>
+<td><code>project_name</code></td>
+<td><code>--project-name</code></td>
+<td><a href="https://www.commonwl.org/v1.2/Workflow.html#CWLType">string</a></td>
+</tr>
+<tr>
+<td><code>ogc_api_processes_endpoint</code></td>
+<td><code>--ogc-api-processes-endpoint</code></td>
+<td><a href="https://raw.githubusercontent.com/eoap/schemas/main/string_format.yaml#URI">URI</a>:<ul><li><code>value</code>: <a href="https://www.commonwl.org/v1.2/Workflow.html#CWLType">string</a></li></ul></td>
+</tr>
+<tr>
+<td><code>osc_location</code></td>
+<td><code>--output</code></td>
+<td><a href="https://www.commonwl.org/v1.2/Workflow.html#Directory">Directory</a></td>
+</tr>
+<tr>
+<td><code>cwl_workflow_location</code></td>
+<td><code>--cwl_workflow_location</code></td>
+<td><a href="https://raw.githubusercontent.com/eoap/schemas/main/string_format.yaml#URI">URI</a>:<ul><li><code>value</code>: <a href="https://www.commonwl.org/v1.2/Workflow.html#CWLType">string</a></li></ul></td>
+</tr>
+<tr>
+<td><code>experiment_id</code></td>
+<td><code>--experiment-id</code></td>
+<td><a href="https://www.commonwl.org/v1.2/Workflow.html#CWLType">string</a></td>
+</tr>
+<tr>
+<td><code>authorization_token</code></td>
+<td><code>--authorization-token</code></td>
+<td><a href="https://www.commonwl.org/v1.2/Workflow.html#CWLType">string</a></td>
+</tr>
+</tbody>
+</table>
+<h3 id="execution-usage-example_2">Execution usage example:</h3>
+<div class="highlight"><pre><span></span><code><span id="__span-2-1">osc-metadata-client &lt;ARGUMENT_DYNAMICALLY_SET&gt; \
+</span><span id="__span-2-2">--id &lt;JOB_ID&gt; \
+</span><span id="__span-2-3">--project-id &lt;PROJECT_ID&gt; \
+</span><span id="__span-2-4">--project-name &lt;PROJECT_NAME&gt; \
+</span><span id="__span-2-5">--ogc-api-processes-endpoint &lt;OGC_API_PROCESSES_ENDPOINT&gt; \
+</span><span id="__span-2-6">--output &lt;OSC_LOCATION&gt; \
+</span><span id="__span-2-7">--cwl_workflow_location &lt;CWL_WORKFLOW_LOCATION&gt; \
+</span><span id="__span-2-8">--experiment-id &lt;EXPERIMENT_ID&gt; \
+</span><span id="__span-2-9">--authorization-token &lt;AUTHORIZATION_TOKEN&gt;
+</span></code></pre></div>
+<h3 id="run-in-step_3">Run in step</h3>
+<p><code>commit_and_push</code></p>
+<h2 id="commit_and_push_cli">commit_and_push_cli</h2>
+<h3 id="cwl-class_4">CWL Class</h3>
+<p><a href="https://www.commonwl.org/v1.2/CommandLineTool.html#CommandLineTool">CommandLineTool</a></p>
+<h3 id="inputs_5">Inputs</h3>
+<table>
+<thead>
+<tr>
+<th>Id</th>
+<th>Option</th>
+<th>Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>commit_message</code></td>
+<td><code>--commit_message</code></td>
+<td><a href="https://www.commonwl.org/v1.2/Workflow.html#CWLType">string</a></td>
+</tr>
+</tbody>
+</table>
+<h3 id="execution-usage-example_3">Execution usage example:</h3>
+<div class="highlight"><pre><span></span><code><span id="__span-3-1">bash commit_and_push_cli.sh \
+</span><span id="__span-3-2">--commit_message &lt;COMMIT_MESSAGE&gt;
+</span></code></pre></div>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../publish_workflow/" class="btn btn-neutral float-left" title="Publish OSC Workflow"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../../../../explanation/architecture/" class="btn btn-neutral float-right" title="Architecture">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+      <p><a href="https://www.apache.org/licenses/LICENSE-2.0"><img src="https://img.shields.io/badge/license-Apache%20License%202.0-blue"" alt="Apache License, Version 2.0" /></a></p>
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+      <span><a href="../publish_workflow/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../../../../explanation/architecture/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../../../../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "../../../..";</script>
+    <script src="../../../../js/theme_extra.js"></script>
+    <script src="../../../../js/theme.js"></script>
+      <script src="../../../../javascripts/config.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+      <script src="../../../../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

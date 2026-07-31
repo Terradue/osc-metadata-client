@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="shortcut icon" href="../../img/favicon.ico" />
+    <title>PySTAC extensions - Open Science Catalog client</title>
+    <link rel="stylesheet" href="../../css/theme.css" />
+    <link rel="stylesheet" href="../../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+        <link href="../../styles/css/app.css" rel="stylesheet" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "PySTAC extensions";
+        var mkdocs_page_input_path = "reference/pystac-extensions.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="../..">
+          <img src="../../imgs/icon-eoap.png" class="logo" alt="Logo"/>
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../..">Home</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Tutorials</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../tutorials/create-workflow-record/">Create your first workflow record</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">How-to guides</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../how-to/publish-processing-lifecycle/">Publish a processing lifecycle</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../how-to/configure-sources/">Configure sources and authentication</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Reference</span></p>
+              <ul class="current">
+                  <li class="toctree-l1"><a class="reference internal" href="../cli/">CLI</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../outputs/">Generated files</a>
+                  </li>
+                  <li class="toctree-l1 current"><a class="reference internal current" href="#">PySTAC extensions</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#osc-extension">OSC extension</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#themes-extension">Themes extension</a>
+    </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" >CWL publication workflows</a>
+    <ul>
+                <li class="toctree-l2"><a class="reference internal" href="../../c4/components/workflow/publish_workflow/">Publish OSC Workflow</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../../c4/components/workflow/publish_experiment_products/">Publish OSC Experiment and Product</a>
+                </li>
+    </ul>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Explanation</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../explanation/architecture/">Architecture</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../..">Open Science Catalog client</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../.." class="icon icon-home" aria-label="Docs"></a></li>
+          <li class="breadcrumb-item">Reference</li>
+      <li class="breadcrumb-item active">PySTAC extensions</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="pystac-extensions-reference">PySTAC extensions reference</h1>
+<p>This package contains proper PySTAC implementations for the upstream
+<a href="https://github.com/stac-extensions/osc">Open Science Catalog</a> and
+<a href="https://github.com/stac-extensions/themes">Themes</a> STAC specifications. They
+provide typed accessors, schema registration, object-type checks, serialization,
+and extension hooks.</p>
+<p>They are implementations of the published specifications within this client;
+they do not redefine or replace those specifications.</p>
+<h2 id="osc-extension">OSC extension</h2>
+<p>Import from <code>osc_metadata_client.osc_extension</code>.</p>
+<table>
+<thead>
+<tr>
+<th>API</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>OscExtension.ext(obj, add_if_missing=False)</code></td>
+<td>Access OSC fields on a PySTAC <code>Collection</code> or <code>Item</code>.</td>
+</tr>
+<tr>
+<td><code>apply_project(...)</code></td>
+<td>Set the mutually exclusive OSC project shape.</td>
+</tr>
+<tr>
+<td><code>apply_product(...)</code></td>
+<td>Set the mutually exclusive OSC product shape.</td>
+</tr>
+<tr>
+<td><code>OscType</code></td>
+<td><code>project</code> and <code>product</code> values.</td>
+</tr>
+<tr>
+<td><code>OscStatus</code></td>
+<td><code>planned</code>, <code>ongoing</code>, and <code>completed</code> values.</td>
+</tr>
+<tr>
+<td><code>SCHEMA_URI</code></td>
+<td><code>https://stac-extensions.github.io/osc/v1.0.0/schema.json</code></td>
+</tr>
+</tbody>
+</table>
+<p>Supported properties are <code>osc:type</code>, <code>osc:status</code>, <code>osc:workflows</code>,
+<code>osc:project</code>, <code>osc:region</code>, <code>osc:variables</code>, <code>osc:missions</code>, and
+<code>osc:experiment</code>.</p>
+<div class="highlight"><pre><span></span><code><span id="__span-0-1"><span class="kn">from</span><span class="w"> </span><span class="nn">osc_metadata_client.osc_extension</span><span class="w"> </span><span class="kn">import</span> <span class="n">OscExtension</span><span class="p">,</span> <span class="n">OscStatus</span>
+</span><span id="__span-0-2">
+</span><span id="__span-0-3"><span class="n">osc</span> <span class="o">=</span> <span class="n">OscExtension</span><span class="o">.</span><span class="n">ext</span><span class="p">(</span><span class="n">collection</span><span class="p">,</span> <span class="n">add_if_missing</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span><span id="__span-0-4"><span class="n">osc</span><span class="o">.</span><span class="n">apply_product</span><span class="p">(</span>
+</span><span id="__span-0-5">    <span class="n">status</span><span class="o">=</span><span class="n">OscStatus</span><span class="o">.</span><span class="n">COMPLETED</span><span class="p">,</span>
+</span><span id="__span-0-6">    <span class="n">project</span><span class="o">=</span><span class="s2">&quot;project-001&quot;</span><span class="p">,</span>
+</span><span id="__span-0-7">    <span class="n">experiment</span><span class="o">=</span><span class="s2">&quot;experiment-001&quot;</span><span class="p">,</span>
+</span><span id="__span-0-8"><span class="p">)</span>
+</span></code></pre></div>
+<h2 id="themes-extension">Themes extension</h2>
+<p>Import from <code>osc_metadata_client.themes_extension</code>.</p>
+<table>
+<thead>
+<tr>
+<th>API</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ThemesExtension.ext(obj, add_if_missing=False)</code></td>
+<td>Access themes on a PySTAC <code>Catalog</code>, <code>Collection</code>, or <code>Item</code>.</td>
+</tr>
+<tr>
+<td><code>ThemesExtension.summaries(collection, ...)</code></td>
+<td>Access themes in Collection summaries.</td>
+</tr>
+<tr>
+<td><code>Theme</code></td>
+<td>A controlled vocabulary scheme and its concepts.</td>
+</tr>
+<tr>
+<td><code>ThemeConcept</code></td>
+<td>A concept identifier with optional title, description, and URL.</td>
+</tr>
+<tr>
+<td><code>SCHEMA_URI</code></td>
+<td><code>https://stac-extensions.github.io/themes/v1.0.0/schema.json</code></td>
+</tr>
+</tbody>
+</table>
+<div class="highlight"><pre><span></span><code><span id="__span-1-1"><span class="kn">from</span><span class="w"> </span><span class="nn">osc_metadata_client.themes_extension</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+</span><span id="__span-1-2">    <span class="n">Theme</span><span class="p">,</span>
+</span><span id="__span-1-3">    <span class="n">ThemeConcept</span><span class="p">,</span>
+</span><span id="__span-1-4">    <span class="n">ThemesExtension</span><span class="p">,</span>
+</span><span id="__span-1-5"><span class="p">)</span>
+</span><span id="__span-1-6">
+</span><span id="__span-1-7"><span class="n">themes</span> <span class="o">=</span> <span class="n">ThemesExtension</span><span class="o">.</span><span class="n">ext</span><span class="p">(</span><span class="n">collection</span><span class="p">,</span> <span class="n">add_if_missing</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span><span id="__span-1-8"><span class="n">themes</span><span class="o">.</span><span class="n">apply</span><span class="p">([</span>
+</span><span id="__span-1-9">    <span class="n">Theme</span><span class="p">(</span>
+</span><span id="__span-1-10">        <span class="n">scheme</span><span class="o">=</span><span class="s2">&quot;https://github.com/stac-extensions/osc#theme&quot;</span><span class="p">,</span>
+</span><span id="__span-1-11">        <span class="n">concepts</span><span class="o">=</span><span class="p">[</span><span class="n">ThemeConcept</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="s2">&quot;land&quot;</span><span class="p">)],</span>
+</span><span id="__span-1-12">    <span class="p">)</span>
+</span><span id="__span-1-13"><span class="p">])</span>
+</span></code></pre></div>
+<p>Passing <code>add_if_missing=True</code> adds the correct schema URI to
+<code>stac_extensions</code>. Without it, accessing an undeclared extension raises
+PySTAC's <code>ExtensionNotImplemented</code>. Unsupported PySTAC object types raise
+<code>ExtensionTypeError</code>.</p>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../outputs/" class="btn btn-neutral float-left" title="Generated files"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../../c4/components/workflow/publish_workflow/" class="btn btn-neutral float-right" title="Publish OSC Workflow">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+      <p><a href="https://www.apache.org/licenses/LICENSE-2.0"><img src="https://img.shields.io/badge/license-Apache%20License%202.0-blue"" alt="Apache License, Version 2.0" /></a></p>
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+      <span><a href="../outputs/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../../c4/components/workflow/publish_workflow/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "../..";</script>
+    <script src="../../js/theme_extra.js"></script>
+    <script src="../../js/theme.js"></script>
+      <script src="../../javascripts/config.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+      <script src="../../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

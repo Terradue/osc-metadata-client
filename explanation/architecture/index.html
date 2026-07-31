@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+
+<html class="writer-html5" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="IE=edge" http-equiv="X-UA-Compatible"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="../../img/favicon.ico" rel="shortcut icon"/>
+<title>Architecture - Open Science Catalog client</title>
+<link href="../../css/theme.css" rel="stylesheet"/>
+<link href="../../css/theme_extra.css" rel="stylesheet"/>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" rel="stylesheet"/>
+<link href="../../styles/css/app.css" rel="stylesheet"/>
+<script>
+        // Current page data
+        var mkdocs_page_name = "Architecture";
+        var mkdocs_page_input_path = "explanation/architecture.md";
+        var mkdocs_page_url = null;
+      </script>
+<!--[if lt IE 9]>
+      <script src="../../js/html5shiv.min.js"></script>
+    <![endif]-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+<script>hljs.highlightAll();</script>
+</head>
+<body class="wy-body-for-nav" role="document">
+<div class="wy-grid-for-nav">
+<nav class="wy-nav-side stickynav" data-toggle="wy-nav-shift">
+<div class="wy-side-scroll">
+<div class="wy-side-nav-search">
+<a href="../..">
+<img alt="Logo" class="logo" src="../../imgs/icon-eoap.png"/>
+</a><div role="search">
+<form action="../../search.html" class="wy-form" id="rtd-search-form" method="get">
+<input aria-label="Search docs" name="q" placeholder="Search docs" title="Type search term here" type="text"/>
+</form>
+</div>
+</div>
+<div aria-label="Navigation menu" class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../..">Home</a>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/create-workflow-record/">Create your first workflow record</a>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">How-to guides</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../how-to/publish-processing-lifecycle/">Publish a processing lifecycle</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../how-to/configure-sources/">Configure sources and authentication</a>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../reference/cli/">CLI</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../reference/outputs/">Generated files</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../reference/pystac-extensions/">PySTAC extensions</a>
+</li>
+<li class="toctree-l1"><a class="reference internal">CWL publication workflows</a>
+<ul>
+<li class="toctree-l2"><a class="reference internal" href="../../c4/components/workflow/publish_workflow/">Publish OSC Workflow</a>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../c4/components/workflow/publish_experiment_products/">Publish OSC Experiment and Product</a>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">Explanation</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal current" href="#">Architecture</a>
+<ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="#conversion-flow">Conversion flow</a>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#why-transpiler-mate-is-a-dependency">Why transpiler-mate is a dependency</a>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#why-the-pystac-implementations-live-here">Why the PySTAC implementations live here</a>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#system-boundaries">System boundaries</a>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+</nav>
+<section class="wy-nav-content-wrap" data-toggle="wy-nav-shift">
+<nav aria-label="Mobile navigation menu" class="wy-nav-top" role="navigation">
+<i class="fa fa-bars" data-toggle="wy-nav-top"></i>
+<a href="../..">Open Science Catalog client</a>
+</nav>
+<div class="wy-nav-content">
+<div class="rst-content"><div aria-label="breadcrumbs navigation" role="navigation">
+<ul class="wy-breadcrumbs">
+<li><a aria-label="Docs" class="icon icon-home" href="../.."></a></li>
+<li class="breadcrumb-item">Explanation</li>
+<li class="breadcrumb-item active">Architecture</li>
+<li class="wy-breadcrumbs-aside">
+</li>
+</ul>
+<hr/>
+</div>
+<div class="document" itemscope="itemscope" itemtype="http://schema.org/Article" role="main">
+<div class="section" itemprop="articleBody">
+<h1 id="architecture">Architecture</h1>
+<p><code>osc-metadata-client</code> is intentionally a simple conversion connector between a
+processing service and the ESA Open Science Catalog. It does not execute CWL,
+serve OGC APIs, or publish the final catalog.</p>
+<h2 id="conversion-flow">Conversion flow</h2>
+<div class="mermaid">flowchart LR
+    CWL[Annotated CWL source] --&gt; TM[Terradue transpiler-mate]
+    TM --&gt; BASE[Base OGC API Record]
+    PROCESS[processes / process ID] --&gt; WF[Workflow record]
+    JOB[jobs / job ID] --&gt; EX[Experiment record + inputs]
+    RESULT[jobs / job ID / results] --&gt; PR[Product STAC Collection + outputs]
+    BASE --&gt; WF
+    BASE --&gt; EX
+    BASE --&gt; PR
+    EXT[OSC + Themes PySTAC extensions] --&gt; PR
+    WF --&gt; OSC[ESA Open Science Catalog metadata tree]
+    EX --&gt; OSC
+    PR --&gt; OSC</div>
+<p>The <code>workflow</code> path associates the CWL-derived record with an OGC API -
+Processes process. The <code>experiment</code> path reads the corresponding job status and
+inputs. The <code>products</code> path reads the successful job result. Together they map
+the processing lifecycle to the catalog's workflow, experiment, and product
+resources.</p>
+<h2 id="why-transpiler-mate-is-a-dependency">Why <code>transpiler-mate</code> is a dependency</h2>
+<p>Terradue's <a href="https://terradue.github.io/transpiler-mate/">transpiler-mate</a> already
+provides the reusable metadata layer: it extracts Schema.org
+<code>SoftwareApplication</code> metadata from annotated CWL and transpiles it to OGC API
+Records. Reusing that API keeps this client focused on Open Science Catalog
+concerns:</p>
+<ul>
+<li>catalog resource types and relationships;</li>
+<li>OGC API - Processes process, job, and result links;</li>
+<li>job inputs, outputs, and provenance;</li>
+<li>catalog directory layout and parent catalogs.</li>
+</ul>
+<h2 id="why-the-pystac-implementations-live-here">Why the PySTAC implementations live here</h2>
+<p>PySTAC does not provide built-in implementations for every community extension.
+This project therefore implements the published
+<a href="https://github.com/stac-extensions/osc">OSC</a> and
+<a href="https://github.com/stac-extensions/themes">Themes</a> specifications using
+PySTAC's extension framework.</p>
+<p>The implementations are more than JSON helpers: they register versioned schema
+URIs and extension hooks, enforce supported STAC object types, expose typed
+properties and enums, and support read/write round trips. Product creation uses
+these APIs to construct standards-aligned STAC Collections.</p>
+<h2 id="system-boundaries">System boundaries</h2>
+<p>The client reads CWL from HTTP(S), <code>file://</code>, or OCI and reads job information
+from an OGC API - Processes service. It writes local JSON and YAML files. A
+separate process remains responsible for deploying the workflow, creating the
+job, publishing the generated files, and serving the Open Science Catalog.</p>
+</div>
+</div><footer>
+<div aria-label="Footer Navigation" class="rst-footer-buttons" role="navigation">
+<a class="btn btn-neutral float-left" href="../../c4/components/workflow/publish_experiment_products/" title="Publish OSC Experiment and Product"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+</div>
+<hr/>
+<div role="contentinfo">
+<!-- Copyright etc -->
+<p><a href="https://www.apache.org/licenses/LICENSE-2.0"><img "="" alt="Apache License, Version 2.0" src="https://img.shields.io/badge/license-Apache%20License%202.0-blue"/></a></p>
+</div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+</div>
+</div>
+</section>
+</div>
+<div aria-label="Versions" class="rst-versions" role="note">
+<span class="rst-current-version" data-toggle="rst-current-version">
+<span><a href="../../c4/components/workflow/publish_experiment_products/" style="color: #fcfcfc">« Previous</a></span>
+</span>
+</div>
+<script src="../../js/jquery-3.6.0.min.js"></script>
+<script>var base_url = "../..";</script>
+<script src="../../js/theme_extra.js"></script>
+<script src="../../js/theme.js"></script>
+<script src="../../javascripts/config.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<script src="../../search/main.js"></script>
+<script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+<script type="module">import mermaid from "https://unpkg.com/mermaid@11.4.1/dist/mermaid.esm.min.mjs";
+mermaid.initialize({});</script></body>
+</html>

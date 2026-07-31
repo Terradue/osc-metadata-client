@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="description" content="None" />
+      <link rel="shortcut icon" href="img/favicon.ico" />
+    <title>Open Science Catalog client</title>
+    <link rel="stylesheet" href="css/theme.css" />
+    <link rel="stylesheet" href="css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+        <link href="styles/css/app.css" rel="stylesheet" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Home";
+        var mkdocs_page_input_path = "index.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href=".">
+          <img src="imgs/icon-eoap.png" class="logo" alt="Logo"/>
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="./search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+                <li class="toctree-l1 current"><a class="reference internal current" href="#">Home</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#built-on-terradues-metadata-api">Built on Terradue's metadata API</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#native-pystac-extension-support">Native PySTAC extension support</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#choose-the-documentation-you-need">Choose the documentation you need</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#license">License</a>
+    </li>
+    </ul>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Tutorials</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="tutorials/create-workflow-record/">Create your first workflow record</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">How-to guides</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="how-to/publish-processing-lifecycle/">Publish a processing lifecycle</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="how-to/configure-sources/">Configure sources and authentication</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Reference</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="reference/cli/">CLI</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="reference/outputs/">Generated files</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="reference/pystac-extensions/">PySTAC extensions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" >CWL publication workflows</a>
+    <ul>
+                <li class="toctree-l2"><a class="reference internal" href="c4/components/workflow/publish_workflow/">Publish OSC Workflow</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="c4/components/workflow/publish_experiment_products/">Publish OSC Experiment and Product</a>
+                </li>
+    </ul>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Explanation</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="explanation/architecture/">Architecture</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href=".">Open Science Catalog client</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="." class="icon icon-home" aria-label="Docs"></a></li>
+      <li class="breadcrumb-item active">Home</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="open-science-catalog-client">Open Science Catalog Client</h1>
+<p><code>osc-metadata-client</code> is a small connector that converts the metadata around
+<a href="https://docs.ogc.org/is/18-062r2/18-062r2.html">OGC API - Processes</a>
+processes, jobs, and results into records for the ESA
+<a href="https://opensciencedata.esa.int/">Open Science Catalog</a>.</p>
+<p>It has one deliberately narrow responsibility:</p>
+<table>
+<thead>
+<tr>
+<th>OGC API - Processes resource</th>
+<th>Open Science Catalog representation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Process and its annotated CWL source</td>
+<td>Workflow OGC API Record</td>
+</tr>
+<tr>
+<td>Job and its inputs/status</td>
+<td>Experiment OGC API Record</td>
+</tr>
+<tr>
+<td>Successful job result</td>
+<td>Product STAC Collection</td>
+</tr>
+</tbody>
+</table>
+<p>The client is not a workflow engine, an OGC API - Processes server, or a catalog
+publisher. It prepares catalog-ready files that another publication workflow can
+commit or publish.</p>
+<h2 id="built-on-terradues-metadata-api">Built on Terradue's metadata API</h2>
+<p>The initial CWL-to-OGC API Records conversion is performed by Terradue's
+<a href="https://terradue.github.io/transpiler-mate/">transpiler-mate</a> Python API. This
+client builds on that conversion by adding Open Science Catalog resource types,
+relationships, provenance, OGC API - Processes links, and result metadata.</p>
+<h2 id="native-pystac-extension-support">Native PySTAC extension support</h2>
+<p>The project includes proper, typed PySTAC implementations for both the
+<a href="https://github.com/stac-extensions/themes">STAC Themes extension</a> and the
+<a href="https://github.com/stac-extensions/osc">STAC Open Science Catalog extension</a>.
+They use PySTAC's extension interfaces and hooks rather than inserting untyped
+JSON fields directly. See the <a href="reference/pystac-extensions/">PySTAC extensions reference</a>.</p>
+<h2 id="choose-the-documentation-you-need">Choose the documentation you need</h2>
+<p>This documentation follows <a href="https://diataxis.fr/">Diátaxis</a>:</p>
+<ul>
+<li><strong>Tutorial:</strong> <a href="tutorials/create-workflow-record/">create your first workflow record</a></li>
+<li><strong>How-to guides:</strong> <a href="how-to/publish-processing-lifecycle/">publish a processing lifecycle</a>
+  or <a href="how-to/configure-sources/">configure authentication and sources</a></li>
+<li><strong>Reference:</strong> consult the <a href="reference/cli/">CLI</a>,
+  <a href="reference/outputs/">generated files</a>, or
+  <a href="reference/pystac-extensions/">PySTAC extension API</a></li>
+<li><strong>Explanation:</strong> understand the <a href="explanation/architecture/">architecture and design boundaries</a></li>
+</ul>
+<h2 id="license">License</h2>
+<p>This software is released under the
+<a href="https://www.apache.org/licenses/LICENSE-2.0">Apache-2.0</a> license.</p>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="tutorials/create-workflow-record/" class="btn btn-neutral float-right" title="Create your first workflow record">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+      <p><a href="https://www.apache.org/licenses/LICENSE-2.0"><img src="https://img.shields.io/badge/license-Apache%20License%202.0-blue"" alt="Apache License, Version 2.0" /></a></p>
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+    
+      <span><a href="tutorials/create-workflow-record/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = ".";</script>
+    <script src="js/theme_extra.js"></script>
+    <script src="js/theme.js"></script>
+      <script src="javascripts/config.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+      <script src="search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>
+
+<!--
+MkDocs version : 1.6.1
+Build Date UTC : 2026-07-31 13:06:19.066993+00:00
+-->

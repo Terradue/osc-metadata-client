@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="shortcut icon" href="../../img/favicon.ico" />
+    <title>CLI - Open Science Catalog client</title>
+    <link rel="stylesheet" href="../../css/theme.css" />
+    <link rel="stylesheet" href="../../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+        <link href="../../styles/css/app.css" rel="stylesheet" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "CLI";
+        var mkdocs_page_input_path = "reference/cli.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="../..">
+          <img src="../../imgs/icon-eoap.png" class="logo" alt="Logo"/>
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../..">Home</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Tutorials</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../tutorials/create-workflow-record/">Create your first workflow record</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">How-to guides</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../how-to/publish-processing-lifecycle/">Publish a processing lifecycle</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../how-to/configure-sources/">Configure sources and authentication</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Reference</span></p>
+              <ul class="current">
+                  <li class="toctree-l1 current"><a class="reference internal current" href="#">CLI</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#command-shape">Command shape</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#shared-options">Shared options</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#workflow">workflow</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#experiment">experiment</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#products">products</a>
+    </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../outputs/">Generated files</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../pystac-extensions/">PySTAC extensions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" >CWL publication workflows</a>
+    <ul>
+                <li class="toctree-l2"><a class="reference internal" href="../../c4/components/workflow/publish_workflow/">Publish OSC Workflow</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../../c4/components/workflow/publish_experiment_products/">Publish OSC Experiment and Product</a>
+                </li>
+    </ul>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Explanation</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../explanation/architecture/">Architecture</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../..">Open Science Catalog client</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../.." class="icon icon-home" aria-label="Docs"></a></li>
+          <li class="breadcrumb-item">Reference</li>
+      <li class="breadcrumb-item active">CLI</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="cli-reference">CLI reference</h1>
+<h2 id="command-shape">Command shape</h2>
+<div class="highlight"><pre><span></span><code><span id="__span-0-1">osc-metadata-client [OPTIONS] SOURCE COMMAND [ARGS]...
+</span></code></pre></div>
+<p><code>SOURCE</code> is the annotated CWL document used to initialize the metadata record.
+Shared options must appear before <code>SOURCE</code>; command-specific options appear after
+the command.</p>
+<h2 id="shared-options">Shared options</h2>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--id TEXT</code></td>
+<td>yes</td>
+<td>Process ID for <code>workflow</code>; job ID for <code>experiment</code> and <code>products</code>.</td>
+</tr>
+<tr>
+<td><code>--project-id TEXT</code></td>
+<td>yes</td>
+<td>Referencing Open Science Catalog project identifier.</td>
+</tr>
+<tr>
+<td><code>--project-name TEXT</code></td>
+<td>yes</td>
+<td>Human-readable project name.</td>
+</tr>
+<tr>
+<td><code>--ogc-api-processes-endpoint TEXT</code></td>
+<td>yes</td>
+<td>OGC API - Processes base URL.</td>
+</tr>
+<tr>
+<td><code>--geobrowser-endpoint TEXT</code></td>
+<td>yes</td>
+<td>Geobrowser base URL.</td>
+</tr>
+<tr>
+<td><code>--output PATH</code></td>
+<td>yes</td>
+<td>Root directory for generated metadata.</td>
+</tr>
+<tr>
+<td><code>--oauth2-bearer TEXT</code></td>
+<td>no</td>
+<td>Token for HTTP(S) source and OGC API requests; environment: <code>OAUTH2_BEARER</code>.</td>
+</tr>
+<tr>
+<td><code>--oci-hostname TEXT</code></td>
+<td>no</td>
+<td>OCI registry hostname; environment: <code>OCI_HOSTNAME</code>.</td>
+</tr>
+<tr>
+<td><code>--oci-username TEXT</code></td>
+<td>no</td>
+<td>OCI registry username; environment: <code>OCI_USERNAME</code>.</td>
+</tr>
+<tr>
+<td><code>--oci-password TEXT</code></td>
+<td>no</td>
+<td>OCI registry password; environment: <code>OCI_PASSWORD</code>.</td>
+</tr>
+</tbody>
+</table>
+<p>Without <code>--oauth2-bearer</code>, HTTP(S) requests are unauthenticated.</p>
+<h2 id="workflow"><code>workflow</code></h2>
+<div class="highlight"><pre><span></span><code><span id="__span-1-1">osc-metadata-client [OPTIONS] SOURCE workflow
+</span></code></pre></div>
+<p>Converts CWL application metadata into an Open Science Catalog workflow OGC API
+Record. It adds links to the source, <code>/processes/{id}</code>, and the Geobrowser process
+page.</p>
+<p>Output: <code>OUTPUT/workflows/ID/record.json</code></p>
+<p><img alt="Workflow flow diagram" src="../../diagrams/out/flow/workflow.svg" /></p>
+<p><img alt="Workflow sequence diagram" src="../../diagrams/out/sequence/workflow.svg" /></p>
+<h2 id="experiment"><code>experiment</code></h2>
+<div class="highlight"><pre><span></span><code><span id="__span-2-1">osc-metadata-client [OPTIONS] SOURCE experiment --workflow-id TEXT
+</span></code></pre></div>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--workflow-id TEXT</code></td>
+<td>yes</td>
+<td>Identifier of the workflow related to this job.</td>
+</tr>
+</tbody>
+</table>
+<p>Polls <code>/jobs/{id}</code> until the job reaches a terminal state. A successful job
+produces an experiment OGC API Record and serialized inputs; any other terminal
+status fails the command.</p>
+<p>Outputs:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-3-1">OUTPUT/experiments/ID/record.json
+</span><span id="__span-3-2">OUTPUT/experiments/ID/input.yaml
+</span></code></pre></div>
+<p><img alt="Experiment flow diagram" src="../../diagrams/out/flow/experiments.svg" /></p>
+<p><img alt="Experiment sequence diagram" src="../../diagrams/out/sequence/experiments.svg" /></p>
+<h2 id="products"><code>products</code></h2>
+<div class="highlight"><pre><span></span><code><span id="__span-4-1">osc-metadata-client [OPTIONS] SOURCE products --experiment-id TEXT
+</span></code></pre></div>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--experiment-id TEXT</code></td>
+<td>yes</td>
+<td>Identifier of the experiment related to this result.</td>
+</tr>
+</tbody>
+</table>
+<p>Confirms the job succeeded, retrieves <code>/jobs/{id}/results</code>, and creates a product
+STAC Collection using the OSC and Themes PySTAC extensions.</p>
+<p>Outputs:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-5-1">OUTPUT/products/ID/collection.json
+</span><span id="__span-5-2">OUTPUT/products/ID/output.yaml
+</span></code></pre></div>
+<p><img alt="Products flow diagram" src="../../diagrams/out/flow/products.svg" /></p>
+<p><img alt="Products sequence diagram" src="../../diagrams/out/sequence/products.svg" /></p>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../../how-to/configure-sources/" class="btn btn-neutral float-left" title="Configure sources and authentication"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../outputs/" class="btn btn-neutral float-right" title="Generated files">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+      <p><a href="https://www.apache.org/licenses/LICENSE-2.0"><img src="https://img.shields.io/badge/license-Apache%20License%202.0-blue"" alt="Apache License, Version 2.0" /></a></p>
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+      <span><a href="../../how-to/configure-sources/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../outputs/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "../..";</script>
+    <script src="../../js/theme_extra.js"></script>
+    <script src="../../js/theme.js"></script>
+      <script src="../../javascripts/config.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+      <script src="../../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>
