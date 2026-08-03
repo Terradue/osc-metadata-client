@@ -1,82 +1,60 @@
-cwlVersion: v1.2
 $namespaces:
-  s: https://schema.org/
-
-schemas:
-- http://schema.org/version/9.0/schemaorg-current-http.rdf
-
-# The software itself
-
-s:name: OSC Client - Publish `experiment` and `product`
+  s: "https://schema.org/"
+'@type': "s:SoftwareApplication"
+s:name: "OSC Client - Publish `experiment` and `product`"
 s:description: ESA Open Science Catalog Client
-s:dateCreated: '2026-05-12'
+s:dateCreated: 2026-05-12
 s:license:
-  '@type': s:CreativeWork
+  @type: "s:CreativeWork"
   s:identifier: Apache-2.0
-
-# Discoverability and citation
-
-s:keywords:
-- CWL
-- CWL Workflow
-- Workflow
-- Earth Observation
-- Earth Observation application package
-
-# Run-time environment
-
+  s:name: Apache License 2.0
+  s:url: "https://spdx.org/licenses/Apache-2.0.html"
 s:operatingSystem:
-- Linux
-- MacOS X
-s:softwareRequirements:
-- https://cwltool.readthedocs.io/en/latest/
-- https://www.python.org/
-
-# Current version of the software
-
+  - Linux
+  - macOS Server
 s:softwareVersion: 0.1.0
 s:softwareHelp:
-  '@type': s:CreativeWork
-  s:name: User Manual
-  s:url: https://terradue.github.io/osc-metadata-client/
-
-# Publisher
-
+  - @type: "s:CreativeWork"
+    s:name: User Manual
+    s:url: "https://terradue.github.io/osc-metadata-client/"
 s:publisher:
-  '@type': s:Organization
-  s:email: info@terradue.com
-  s:identifier: https://ror.org/0069cx113
+  @type: "s:Organization"
   s:name: Terradue Srl
-
-# Authors & Contributors
-
+  s:email: "info@terradue.com"
+  s:identifier: "https://ror.org/0069cx113"
 s:author:
-- '@type': s:Role
-  s:roleName: Project Manager
-  s:additionalType: http://purl.org/spar/datacite/ProjectManager
-  s:author:
-    '@type': s:Person
-    s:affiliation:
-      '@type': s:Organization
-      s:identifier: https://ror.org/0069cx113
-      s:name: Terradue
-    s:email: fabrice.brito@terradue.com
-    s:familyName: Brito
-    s:givenName: Fabrice
-    s:identifier: https://orcid.org/0009-0000-1342-9736
-- '@type': s:Role
-  s:roleName: Project Leader
-  s:additionalType: http://purl.org/spar/datacite/ProjectLeader
-  s:author:
-    '@type': s:Person
-    s:affiliation:
-      '@type': s:Organization
-      s:identifier: https://ror.org/0069cx113
-      s:name: Terradue
-    s:email: simone.tripodi@terradue.com
-    s:familyName: Tripodi
-    s:givenName: Simone
-    s:identifier: https://orcid.org/0009-0006-2063-618X
+  - @type: "s:Role"
+    s:roleName: Supervision
+    s:startDate: 2026-02-10
+    s:additionalType: "https://credit.niso.org/contributor-roles/supervision/"
+    s:author:
+      @type: "s:Person"
+      s:givenName: Fabrice
+      s:familyName: Brito
+      s:email: "fabrice.brito@terradue.com"
+      s:affiliation:
+        @type: "s:Organization"
+        s:name: Terradue Srl
+        s:email: "info@terradue.com"
+        s:identifier: "https://ror.org/0069cx113"
+  - @type: "s:Role"
+    s:roleName: Software
+    s:startDate: 2026-02-10
+    s:additionalType: "https://credit.niso.org/contributor-roles/software/"
+    s:author:
+      @type: "s:Person"
+      s:givenName: Simone
+      s:familyName: Tripodi
+      s:email: "simone.tripodi@gmail.com"
+      s:affiliation:
+        @type: "s:Organization"
+        s:name: Terradue Srl
+        s:email: "info@terradue.com"
+        s:identifier: "https://ror.org/0069cx113"
+
+cwlVersion: v1.2
+schemas:
+- http://schema.org/version/9.0/schemaorg-current-http.rdf
 
 # CWL Workflow
 

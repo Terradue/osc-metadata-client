@@ -52,8 +52,9 @@ s:publisher:
 
 s:author:
 - '@type': s:Role
-  s:roleName: Project Manager
-  s:additionalType: http://purl.org/spar/datacite/ProjectManager
+  s:roleName: Supervision
+  s:startDate: 2026-02-10
+  s:additionalType: "https://credit.niso.org/contributor-roles/supervision/"
   s:author:
     '@type': s:Person
     s:affiliation:
@@ -65,8 +66,9 @@ s:author:
     s:givenName: Fabrice
     s:identifier: https://orcid.org/0009-0000-1342-9736
 - '@type': s:Role
-  s:roleName: Project Leader
-  s:additionalType: http://purl.org/spar/datacite/ProjectLeader
+  s:roleName: Software
+  s:startDate: 2026-02-10
+  s:additionalType: "https://credit.niso.org/contributor-roles/software/"
   s:author:
     '@type': s:Person
     s:affiliation:
