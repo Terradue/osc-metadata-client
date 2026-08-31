@@ -26,7 +26,7 @@ classifiers = [
   "Programming Language :: Python :: Implementation :: PyPy",
 ]
 dependencies = [
-  "click==8.4.2",
+  "click==8.5.0",
   "loguru==0.7.3",
   "ogc-api-processes-client==0.6.0",
   "pydantic==2.13.4",
