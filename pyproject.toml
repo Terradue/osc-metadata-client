@@ -29,7 +29,7 @@ dependencies = [
   "click==8.4.2",
   "loguru==0.7.3",
   "ogc-api-processes-client==0.6.0",
-  "pydantic==2.13.4",
+  "pydantic==2.13.5",
   "transpiler-mate==0.50.0",
   "pystac==1.14.3"
 ]
